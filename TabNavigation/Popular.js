@@ -61,6 +61,18 @@ const Popular =()=>{
             color: "red",
 
         },
+        {
+            name: "Video",
+            email: "1 day passed",
+            color: "red",
+
+        },
+        {
+            name: "Video",
+            email: "1 day passed",
+            color: "red",
+
+        },
 
     ]
 
@@ -91,10 +103,7 @@ const Popular =()=>{
 
 
     return(
-       <SafeAreaView style={{ backgroundColor:"black"}}>
-
-
-
+       <SafeAreaView style={{ backgroundColor:"black", height:"100%", width:"100%"}}>
 
            <View style={{marginTop:hp("1%")}}>
 
@@ -127,7 +136,8 @@ const Popular =()=>{
                />
            </View>
 
-           <FlatList style={{marginHorizontal:"6%"}}
+
+           <FlatList style={{marginHorizontal:"6%", marginBottom:hp("2%")}}
                          data={data}
                          keyExtractor={item => item.id}
                          renderItem={({item, index}) => {

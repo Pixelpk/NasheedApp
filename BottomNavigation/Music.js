@@ -12,7 +12,7 @@ const Music =()=>{
 
 
     return(
-      <SafeAreaView style={{height:hp("100%"),backgroundColor:"black"}}>
+      <SafeAreaView style={{height:"100%", width:"100%",backgroundColor:"black"}}>
 
           <Tab.Navigator screenOptions={({ route }) => ({
               tabBarIcon: ({ focused, color, size }) => {

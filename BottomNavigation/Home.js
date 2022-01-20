@@ -77,14 +77,11 @@ const Home =()=>{
 
     return(
 
-
-
-    <SafeAreaView  style={{height:hp("100%"), backgroundColor:"#171719"}}>
-        <ScrollView>
-
+    <SafeAreaView  style={{height:"100%",backgroundColor:"#171719"}}>
         <View style={{marginTop:hp("1%")}}>
             <SearchBar
-                inputContainerStyle={{backgroundColor: 'black',}}
+                inputContainerStyle={{backgroundColor: 'black', borderRadius:20}}
+
                 showLoading={false}
 
                 containerStyle={{
@@ -93,12 +90,12 @@ const Home =()=>{
                     borderWidth: 0,
                     shadowColor: "#000",
                     borderBottomColor: 'transparent',
-                    borderTopColor: 'transparent',
-                    height:hp("4%")
+                    borderTopColor: 'transparent'
                 }}
                 inputStyle={
                     {fontSize:hp("2%")}
                 }
+
                 clearIcon={true}
                 onClearText={() => console.log('onClearText')}
                 onChangeText={(text) => searchFilterFunction(text)}
@@ -110,7 +107,8 @@ const Home =()=>{
                 value={search}
             />
         </View>
-        <View style={{marginTop:hp("10%",), flexDirection:"row", alignItems:"center"}}>
+        <ScrollView style={{marginBottom:hp("2%")}} >
+        <View style={{marginTop:hp("4%",), flexDirection:"row", alignItems:"center"}}>
            <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
            </View>
             <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
@@ -162,7 +160,7 @@ const Home =()=>{
                       }}/>
 
         </View>
-        <View style={{marginTop:hp("6%",), flexDirection:"row", alignItems:"center"}}>
+        <View style={{marginTop:hp("3%",), flexDirection:"row", alignItems:"center"}}>
             <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
             </View>
             <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
@@ -219,7 +217,7 @@ const Home =()=>{
                       }}/>
 
         </View>
-        <View style={{marginTop:hp("6%",), flexDirection:"row", alignItems:"center"}}>
+        <View style={{marginTop:hp("3%",), flexDirection:"row", alignItems:"center"}}>
             <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
             </View>
             <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
@@ -241,12 +239,8 @@ const Home =()=>{
                                       alert("working")
                                   }}>
 
-
-
-
                                   <View style={{
-                                      height: hp("26%"),
-
+                                      height: hp("20%"),
                                       width:wp("29%"),
                                       marginVertical:hp("0.2%"),
 
@@ -256,7 +250,6 @@ const Home =()=>{
 
                                       <View style={{
                                           borderWidth: wp("1.5%"),
-
                                           borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,
                                           justifyContent: "center",
                                           borderColor:"#FF7303",
@@ -271,10 +264,6 @@ const Home =()=>{
                                                  source={require("../Images/Person.png")}/>
 
                                       </View>
-
-
-
-
                                       <Text style={{color:"yellow", textAlign:"center"}}> Check</Text>
 
                                   </View>
@@ -336,14 +325,10 @@ const Home =()=>{
                       }}/>
 
         </View>
-
-
-
-
-
         </ScrollView>
 
     </SafeAreaView>
+
 
 )
 

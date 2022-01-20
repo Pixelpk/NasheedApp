@@ -16,11 +16,10 @@ const Route = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {/*<Stack.Screen name="Splash" component={Splash} options={{headerShown: false}}/>*/}
-                {/*<Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>*/}
-                {/*<Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>*/}
+                <Stack.Screen name="Splash" component={Splash} options={{headerShown: false}}/>
+                <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
+                <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
                 <Stack.Screen name="DashBoard" component={DashBoard} options={{headerShown: false}}/>
-
             </Stack.Navigator>
         </NavigationContainer>
     );
