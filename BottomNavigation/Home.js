@@ -226,7 +226,7 @@ const Home =()=>{
 
         </View>
         <View>
-            <FlatList style={{marginHorizontal: "3%", marginTop:hp("1%")}}
+            <FlatList style={{marginHorizontal: "3%", marginTop:hp("1%",)}}
                       data={data}
                       keyExtractor={item => item.id}
                       horizontal={true}
@@ -240,9 +240,14 @@ const Home =()=>{
                                   }}>
 
                                   <View style={{
-                                      height: hp("20%"),
-                                      width:wp("29%"),
+
                                       marginVertical:hp("0.2%"),
+                                      alignItems:"center",
+                                      paddingLeft:wp("3%"),
+                                      marginBottom:hp("2%"),
+                                      backgroundColor:"red"
+
+
 
                                   }}>
 
@@ -256,15 +261,19 @@ const Home =()=>{
                                           alignItems: "center",
                                           height:90,
                                           width:90,
-                                          marginLeft:"7%"
+
+
+
                                       }}>
-
-
                                           <Image style={{height: "100%", width: "100%",    borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) , backgroundColor:"lightblue", resizeMode:"cover"}}
                                                  source={require("../Images/Person.png")}/>
 
                                       </View>
-                                      <Text style={{color:"yellow", textAlign:"center"}}> Check</Text>
+                                      <View style={{}}>
+                                          <Text style={{marginTop:hp("1%"),color:"yellow"}}>{item.name}</Text>
+                                      </View>
+
+
 
                                   </View>
 

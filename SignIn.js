@@ -9,10 +9,7 @@ const SignIn =()=>{
     const navigation = useNavigation()
 
     return(
-        <ScrollView>
-
-
-            <SafeAreaView style={{height:hp("100%"), backgroundColor:"black"}}>
+        <SafeAreaView style={{height:hp("100%"), backgroundColor:"black"}}>
                 <View style={{alignItems:"center", marginTop:hp("10%")}}>
                     <Image source={require("./Images/LogoName.png")}/>
                 </View>
@@ -64,7 +61,6 @@ const SignIn =()=>{
                     <Text style={{fontSize:hp("1.6%"),color:"white", fontWeight:"bold", marginBottom:hp("2%")}}>BY PIXEL PK TECHNOLOGIES </Text>
                 </View>
             </SafeAreaView>
-        </ScrollView>
     )
 
 
