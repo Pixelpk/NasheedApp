@@ -5,10 +5,6 @@ import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-nativ
 import {SearchBar} from 'react-native-elements';
 import {useNavigation} from "@react-navigation/native";
 
-
-
-
-
 const Home =()=>{
 
     const data = [
@@ -127,7 +123,7 @@ const Home =()=>{
                           return (
                               <TouchableOpacity
                                   onPress={() => {
-                                    alert("working")
+                                   navigation.navigate("PlayScreen")
                                   }}>
 
                                       <View style={{height: hp("16%"), width: wp("27%"),justifyContent: "center", marginLeft: wp("7%")}}>
@@ -157,7 +153,8 @@ const Home =()=>{
 
                               </TouchableOpacity>
                           );
-                      }}/>
+                      }}
+            />
 
         </View>
         <View style={{marginTop:hp("3%",), flexDirection:"row", alignItems:"center"}}>
@@ -179,7 +176,7 @@ const Home =()=>{
                           return (
                               <TouchableOpacity
                                   onPress={() => {
-                                      alert("working")
+                                      navigation.navigate("PlayScreen")
                                   }}>
 
                                   <View style={{height: hp("30%"), width: wp("50%"),justifyContent: "center", marginLeft: wp("7%")}}>
@@ -236,7 +233,7 @@ const Home =()=>{
                           return (
                               <TouchableOpacity
                                   onPress={() => {
-                                      alert("working")
+                                      navigation.navigate("PlayScreen")
                                   }}>
 
                                   <View style={{
@@ -245,13 +242,9 @@ const Home =()=>{
                                       alignItems:"center",
                                       paddingLeft:wp("3%"),
                                       marginBottom:hp("2%"),
-                                      backgroundColor:"red"
-
 
 
                                   }}>
-
-
 
                                       <View style={{
                                           borderWidth: wp("1.5%"),
@@ -272,13 +265,7 @@ const Home =()=>{
                                       <View style={{}}>
                                           <Text style={{marginTop:hp("1%"),color:"yellow"}}>{item.name}</Text>
                                       </View>
-
-
-
                                   </View>
-
-
-
                               </TouchableOpacity>
                           );
                       }}/>
@@ -303,7 +290,7 @@ const Home =()=>{
                           return (
                               <TouchableOpacity
                                   onPress={() => {
-                                      alert("working")
+                                      navigation.navigate("PlayScreen")
                                   }}>
 
                                   <View style={{height: hp("16%"), width: wp("27%"),justifyContent: "center", marginLeft: wp("7%")}}>

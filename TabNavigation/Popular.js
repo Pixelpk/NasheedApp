@@ -135,6 +135,14 @@ const Popular =()=>{
                    value={search}
                />
            </View>
+           <View style={{marginTop:hp("2%",), flexDirection:"row", alignItems:"center"}}>
+               <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
+               </View>
+               <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
+                   Top List
+               </Text>
+
+           </View>
 
 
            <FlatList style={{marginHorizontal:"6%", marginBottom:hp("2%")}}
@@ -145,7 +153,7 @@ const Popular =()=>{
 
                                  <TouchableOpacity
                                      onPress={() => {
-                                         navigation.navigate("DiscoveryInfo")
+                                         navigation.navigate("PlayScreen")
 
                                      }}>
                                      <View style={{flexDirection:"row" ,borderRadius:8, marginTop:20, paddingBottom:2, backgroundColor:"#1F1F21"}}>

@@ -7,28 +7,27 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Feather from "react-native-vector-icons/Feather";
 import Entypo from "react-native-vector-icons/Entypo";
+import {useNavigation} from "@react-navigation/native";
 
 
 const Profile =()=>{
+    const navigation = useNavigation()
 
     return(
        <SafeAreaView style={{height:hp("100%"), backgroundColor:"black"}}>
-
 
            <View style={{height:hp("40%"),borderBottomStartRadius:40,borderBottomEndRadius:40}}>
                <FastImage style={{height:"100%", width:"100%", borderBottomLeftRadius:40, borderBottomRightRadius:40 }} source={require("../Images/check.jpg")}>
                    <View style={{width:"100%", flexDirection:"row", justifyContent:"space-between", marginTop:hp("5%")}}>
                        <View>
-                           <MaterialIcons style={{marginLeft:wp("2%")}} name="keyboard-arrow-left" color="white" size={27}/>
+                           <MaterialIcons  style={{marginLeft:wp("2%")}} name="keyboard-arrow-left" color="white" size={30}/>
                        </View>
                        <View style={{flexDirection:"row", alignItems:"center"}}>
 
                            <Feather style={{marginRight:wp("5%")}} name="info" color="white" size={25}/>
                            <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={15} color={"white"}/>
                        </View>
-
                    </View>
-
                </FastImage>
            </View>
            <View style={{alignItems:"center", height:hp("14%")}}>

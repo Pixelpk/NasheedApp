@@ -18,13 +18,13 @@ const Register =()=>{
     const handleSubmit = () => {
 
         if(name === ""){
-            setEmptyCheck("Empty Email");
+            setEmptyCheck("Empty Name");
             checkValid(true)
 
 
         }
         else if (name.match(/\d+/g)){
-            setEmptyCheck("mstfa");
+            setEmptyCheck("Number cant i");
             checkValid(true)
 
         }

@@ -1,12 +1,12 @@
 import React from "react";
-import {Text} from "react-native";
+import {SafeAreaView, Text} from "react-native";
 
 const Add =()=>{
 
     return(
-        <Text>
-            ADD
-        </Text>
+       <SafeAreaView style={{flex:1, backgroundColor:"black"}}>
+
+       </SafeAreaView>
     )
 
 
