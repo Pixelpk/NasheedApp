@@ -6,7 +6,7 @@ import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-nativ
 const Splash = (navigation) => {
     useEffect(() => {
             setTimeout(() => {
-                navigation.navigation.replace("Register");
+                navigation.navigation.replace("SignIn");
             }, 3000);
 
         },

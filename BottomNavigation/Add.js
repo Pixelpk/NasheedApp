@@ -1,15 +1,16 @@
-import React from "react";
-import {SafeAreaView, Text} from "react-native";
+import React, {useEffect} from 'react';
+import TrackPlayer from 'react-native-track-player';
+import {StyleSheet, View, TouchableOpacity, Text, SafeAreaView} from 'react-native';
 
-const Add =()=>{
 
+const Add = () => {
     return(
-       <SafeAreaView style={{flex:1, backgroundColor:"black"}}>
+        <SafeAreaView style={{flex:1}}>
 
-       </SafeAreaView>
-    )
+        </SafeAreaView>
 
-
+        )
 
 }
+
 export default Add

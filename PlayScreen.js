@@ -1,66 +1,185 @@
-import React, {useRef} from "react";
-import {Animated, Dimensions, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
+import React, {useRef, useEffect, useState} from 'react';
+import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+
+import {
+    View,
+    SafeAreaView,
+    Text,
+    Dimensions,
+    Animated,
+    StyleSheet,
+} from 'react-native';
+
+import TrackPlayer, {
+
+    usePlaybackState,
+    TrackPlayerEvents,
+} from 'react-native-track-player';
+
+import songs from "./check/data";
+import Controller from "./check/Controller";
+import SliderComp from "./check/SliderComp";
+import {PLAYBACK_TRACK_CHANGED} from 'react-native-track-player/lib/eventTypes';
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import Entypo from "react-native-vector-icons/Entypo";
 import EvilIcons from "react-native-vector-icons/EvilIcons";
-import LinearGradient from "react-native-linear-gradient";
-import Ionicons from "react-native-vector-icons/Ionicons";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import {Slider} from "react-native-elements/dist/slider/Slider";
-import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import {useNavigation} from "@react-navigation/native";
 
+const {width, height} = Dimensions.get('window');
 
-const PlayScreen = () => {
+
+
+const TRACK_PLAYER_CONTROLS_OPTS = {
+    waitforBuffer: true,
+    stopWithApp: false,
+    alwaysPauseOnInterruption: true,
+    capabilities: [
+        TrackPlayer.CAPABILITY_PLAY,
+        TrackPlayer.CAPABILITY_PAUSE,
+        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
+        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
+        TrackPlayer.CAPABILITY_SEEK_TO,
+    ],
+    compactCapabilities: [
+        TrackPlayer.CAPABILITY_PLAY,
+        TrackPlayer.CAPABILITY_PAUSE,
+        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
+        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
+    ],
+};
+
+const PlayScreen =()=> {
     const navigation = useNavigation()
+    const scrollX = useRef(new Animated.Value(0)).current;
 
-    const {width,height} = Dimensions.get("window")
+    const slider = useRef(null);
+    const isPlayerReady = useRef(false);
+    const index = useRef(0);
 
-    const data = [
-        {
-            name: "awards sdsds",
-            image: require("./Images/check.jpg"),
+    const [songIndex, setSongIndex] = useState(0);
 
-        },
-        {
-            name: "June Cha",
-            email: "june.cha@gmail.com",
-            color: "yellow",
-            image: require("./Images/check.jpg"),
-        },
+    const isItFromUser = useRef(true);
 
-        {
-            name: "Iida Niskanen",
-            email: "iida.niskanen@gmail.com",
-            color: "green",
-            image: require("./Images/check.jpg"),
+    // for tranlating the album art
+    const position = useRef(Animated.divide(scrollX, width)).current;
+    const playbackState = usePlaybackState();
 
-        },
-        {
-            name: "Basic Info",
-            email: "1 day passed",
-            color: "black",
-            image: require("./Images/check.jpg"),
+    useEffect(() => {
+        // position.addListener(({ value }) => {
+        //   console.log(value);
+        // });
 
-        },
-        {
-            name: "Basic Info",
-            email: "1 day passed",
-            color: "black",
-            image: require("./Images/check.jpg"),
+        scrollX.addListener(({value}) => {
+            const val = Math.round(value / width);
 
-        },
-        {
-            name: "Basic Info",
-            email: "1 day passed",
-            color: "black",
-            image: require("./Images/check.jpg"),
+            setSongIndex(val);
+        });
 
-        },
-    ]
+        TrackPlayer.setupPlayer().then(async () => {
+            // The player is ready to be used
+            console.log('Player ready');
+            // add the array of songs in the playlist
+            await TrackPlayer.reset();
+            await TrackPlayer.add(songs);
+            TrackPlayer.play();
+            isPlayerReady.current = true;
 
+            await TrackPlayer.updateOptions(TRACK_PLAYER_CONTROLS_OPTS);
 
+            //add listener on track change
+            TrackPlayer.addEventListener(PLAYBACK_TRACK_CHANGED, async e => {
+                console.log('song ended', e);
 
+                const trackId = (await TrackPlayer.getCurrentTrack()) - 1; //get the current id
+
+                console.log('track id', trackId, 'index', index.current);
+
+                if (trackId !== index.current) {
+                    setSongIndex(trackId);
+                    isItFromUser.current = false;
+
+                    if (trackId > index.current) {
+                        goNext();
+                    } else {
+                        goPrv();
+                    }
+                    setTimeout(() => {
+                        isItFromUser.current = true;
+                    }, 200);
+                }
+
+                // isPlayerReady.current = true;
+            });
+
+            // monitor intterupt when other apps start playing music
+            TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_DUCK, e => {
+                // console.log(e);
+                if (e.paused) {
+                    // if pause true we need to pause the music
+                    TrackPlayer.pause();
+                } else {
+                    TrackPlayer.play();
+                }
+            });
+        });
+
+        return () => {
+            scrollX.removeAllListeners();
+            TrackPlayer.destroy();
+
+            // exitPlayer();
+        };
+    }, [scrollX]);
+
+    // change the song when index changes
+    useEffect(() => {
+        if (isPlayerReady.current && isItFromUser.current) {
+            TrackPlayer.skip(songs[songIndex].id)
+                .then(_ => {
+                    console.log('changed track');
+                })
+                .catch(e => console.log('error in changing track ', e));
+        }
+        index.current = songIndex;
+    }, [songIndex]);
+
+    const goNext = async () => {
+        slider.current.scrollToOffset({
+            offset: (index.current + 1) * width,
+        });
+
+        await TrackPlayer.play();
+    };
+    const goPrv = async () => {
+        slider.current.scrollToOffset({
+            offset: (index.current - 1) * width,
+        });
+
+        await TrackPlayer.play();
+    };
+
+    const renderItem = ({index, item}) => {
+        return (
+            <Animated.View
+                style={{
+                    alignItems: 'center',
+                    width: width,
+                    transform: [
+                        {
+                            translateX: Animated.multiply(
+                                Animated.add(position, -index),
+                                -100,
+                            ),
+                        },
+                    ],
+                }}>
+                <Animated.Image
+                    source={item.artwork}
+                    style={{width: 320, height: 320, borderRadius: 5}}
+                />
+            </Animated.View>
+        );
+    };
 
     return (
         <SafeAreaView style={{flex: 1, backgroundColor: "black"}}>
@@ -81,94 +200,57 @@ const PlayScreen = () => {
                 </View>
             </View>
 
-            <View style={{flex: 1, alignItems: "center"}}>
-
-                <FlatList style={{height:hp("10%"),marginHorizontal: "3%", marginTop:hp("10%",)}}
-                          data={data}
-                          scrollEventThrottle={16}
-                          pagingEnabled={true}
-                          keyExtractor={item => item.id}
-                          horizontal={true}
-                          renderItem={({
-                                           item, index
-                                       }) => {
-                              return (
-                                  <View style={{width:width-25, justifyContent:"center", alignItems:"center"}} >
-                                  <LinearGradient colors={["#FFD303", "#FF3803"]} style={{
-                                      justifyContent: "center", alignItems: "center", height: hp("28%"), width: hp("28%"), borderRadius: 30,
-                                  }}>
-                                      <Image source={ require("./Images/check.jpg")}
-                                             style={{ height: "95%", width: "95%", borderRadius: 20}}/>
-                                  </LinearGradient>
-                                    <View style={{alignItems:"center"}}>
-                                        <Text style={{color:"white", fontSize:hp("2%"), fontWeight:"bold"}}>
-                                            Tum Shehar e Aman k...
-                                      </Text>
-                                        <Text style={{color:"#AAAAAA", fontSize:hp("1.5%") }}>
-                                            JAMIAT CATEGORY
-                                      </Text>
-                                    </View>
-                                  </View>
-
-
-
-                              );
-                          }}
-                />
-
-                <View style={{
-                    width: "70%",
-                    flexDirection: "row",
-                    justifyContent: "space-around",
-                    marginTop: hp("12%")
-                }}>
-                    <Ionicons style={{marginRight: wp("2%")}} name="shuffle" color="white" size={15}/>
-
-                    <FontAwesome5 style={{marginRight: wp("2%")}} name="step-backward" color="white" size={15}/>
-
-                    <View style={{}}>
-                        <LinearGradient colors={["#FFD303", "#FF3803"]} style={{
-                            marginRight: wp("2%"),
-                            top: -20,
-                            justifyContent: "center", alignItems: "center", height: 40, width: 40, borderRadius: 20
-                        }}>
-                            <Entypo name={"controller-play"} color={"white"} size={25}/>
-
-                        </LinearGradient>
-                    </View>
-                    <FontAwesome5 style={{marginRight: wp("2%")}} name="step-forward" color="white" size={15}/>
-                    <FontAwesome5 style={{marginRight: wp("2%")}} name="volume-up" color="white" size={15}/>
-
-
-                </View>
-                <View style={{flex:1, width:"80%"}}>
-                    <View>
-                        <Slider thumbStyle={{height:15,width:15}} thumbTintColor={"orange"} maximumValue={100} minimumValue={0} style={{height:hp("3.2%")}}>
-
-                        </Slider>
-
-                    </View>
-                    <View style={{flexDirection:"row" , justifyContent:"space-between"}}>
-                        <Text style={{ fontSize:hp("1.5%"),color:"#AAAAAA"}}>
-                            0:00
-                        </Text>
-                        <Text style={{ fontSize:hp("1.5%"),color:"#AAAAAA"}}>
-                            3:00
-                        </Text>
-
-
-                    </View>
-
+            <SafeAreaView style={styles.container}>
+                <SafeAreaView style={{height: 320}}>
+                    <Animated.FlatList
+                        ref={slider}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                        scrollEventThrottle={16}
+                        data={songs}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                        onScroll={Animated.event(
+                            [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                            {useNativeDriver: true},
+                        )}
+                    />
+                </SafeAreaView>
+                <View>
+                    <Text style={styles.title}>{songs[songIndex].title}</Text>
+                    <Text style={styles.artist}>{songs[songIndex].artist}</Text>
                 </View>
 
-            </View>
-
-
-
+                <SliderComp />
+                <Controller onNext={goNext} onPrv={goPrv} />
+            </SafeAreaView>
         </SafeAreaView>
     )
 
 
 }
+const styles = StyleSheet.create({
+    title: {
+        fontSize: 28,
+        textAlign: 'center',
+        fontWeight: '600',
+        textTransform: 'capitalize',
+        color: '#ffffff',
+    },
+    artist: {
+        fontSize: 18,
+        textAlign: 'center',
+        color: '#ffffff',
+        textTransform: 'capitalize',
+    },
+    container: {
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        height: height,
+        maxHeight: 600,
+    },
+});
+
 
 export default PlayScreen

@@ -10,7 +10,6 @@ const Tab = createMaterialTopTabNavigator();
 
 const Music =()=>{
 
-
     return(
       <SafeAreaView style={{height:"100%", width:"100%",backgroundColor:"black"}}>
 
@@ -30,9 +29,6 @@ const Music =()=>{
               <Tab.Screen name="Favourite" component={Favourite}  />
               <Tab.Screen name="Albums" component={Albums}/>
           </Tab.Navigator>
-
-
-
       </SafeAreaView>
     )
 
