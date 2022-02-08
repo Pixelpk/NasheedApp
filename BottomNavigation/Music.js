@@ -2,10 +2,9 @@ import React from "react";
 import {SafeAreaView, Text} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
-import Popular from "../TabNavigation/Popular";
-import Favourite from "../TabNavigation/Favourite";
-import Albums from "../TabNavigation/Albums";
 import TopNasheeds from "../TabNavigation/TopNasheeds";
+import LatestNasheeds from "../TabNavigation/LatestNasheeds";
+import NewNasheeds from "../TabNavigation/NewNasheeds";
 const Tab = createMaterialTopTabNavigator();
 
 const Music =()=>{
@@ -24,10 +23,10 @@ const Music =()=>{
               tabBarActiveTintColor: 'white',
               tabBarInactiveTintColor: '#585858',
               tabBarStyle:{borderTopColor:'rgba(99, 94, 205, 1)',backgroundColor:"#222225"}, headerTintColor:"white"})}>
-              <Tab.Screen  name="Popular" component={Popular}  />
-              <Tab.Screen name="Top Nasheeds" component={TopNasheeds}  />
-              <Tab.Screen name="Favourite" component={Favourite}  />
-              <Tab.Screen name="Albums" component={Albums}/>
+              <Tab.Screen  name="Top Nasheeds" component={TopNasheeds}  />
+              <Tab.Screen name="Latest Nasheeds" component={LatestNasheeds}  />
+              <Tab.Screen name="New Nasheeds" component={NewNasheeds}  />
+              {/*<Tab.Screen name="Albums" component={Albums}/>*/}
           </Tab.Navigator>
       </SafeAreaView>
     )

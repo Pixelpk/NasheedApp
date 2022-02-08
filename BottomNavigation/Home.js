@@ -1,50 +1,34 @@
-import React, {useEffect, useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Dimensions, FlatList,SafeAreaView, Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
 
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-import {SearchBar} from 'react-native-elements';
 import {useNavigation} from "@react-navigation/native";
+import BlogContext from "../ContextApi";
+import LinearGradient from "react-native-linear-gradient";
+import {get_data} from "../AsyncController/Controller";
 
-const Home =()=>{
 
-    const data = [
-        {
-            name:
-                "awards sdsds",
-            email: "JAMIAT CATEGORY",
 
-        },
-        {
-            name: "June Cha",
-            email: "june.cha@gmail.com",
-            color: "yellow"
-        },
+const Home =()=> {
 
-        {
-            name: "Iida Niskanen",
-            email: "iida.niskanen@gmail.com",
-            color: "green"
+    const {setHack, hack, dat, topSong, newNasheed, latestNasheed,setcheck2,check2} = useContext(BlogContext)
 
-        },
-        {
-            name: "Basic Info",
-            email: "1 day passed",
-            color: "black",
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            get_data("User_DATA")
+                .then((response) => {
+                    setHack(response)
+                })
+                .catch((error) => {
+                    console.log(error.response);
+                });
 
-        },
-        {
-            name: "June Cha",
-            email: "1 day passed",
-            color: "yellow"
-        },
+        });
+        return unsubscribe
 
-        {
-            name: "Iida Niskanen",
-            email: "1 day passed",
-            color: "green"
 
-        },
-    ]
+    }, [navigation])
+
 
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -71,264 +55,340 @@ const Home =()=>{
         }
     };
 
-    return(
+    return (
 
-    <SafeAreaView  style={{height:"100%",backgroundColor:"#171719"}}>
-        <View style={{marginTop:hp("1%")}}>
-            <SearchBar
-                inputContainerStyle={{backgroundColor: 'black', borderRadius:20}}
+        <SafeAreaView style={{flex: 1, backgroundColor: "#171719"}}>
+            <ScrollView style={{marginBottom: hp("2%")}}>
+            {hack === null ? <View style={{backgroundColor:"#FF7303", flexDirection:"row",alignItems:"center", justifyContent:"center"}}>
+                <View style={{marginVertical:hp("2%")}}>
+                    <Text style={{fontSize:hp("1.6%"),color:"white"}}>EXPLORE YOUR FAVOURITE NASHEEDS</Text>
+                </View>
+                <TouchableOpacity onPress={()=>navigation.navigate("SignIn")} style={{backgroundColor:"black", borderRadius:15, marginLeft:wp("6%")}}>
+                    <Text style={{fontWeight:"bold", color:"white", marginVertical:2, marginHorizontal:10}}>
+                        SIGN IN
+                    </Text>
+                </TouchableOpacity>
+                <View>
 
-                showLoading={false}
+                </View>
+            </View> : null
 
-                containerStyle={{
-                    backgroundColor: '#171719',
-                    marginHorizontal: 15,
-                    borderWidth: 0,
-                    shadowColor: "#000",
-                    borderBottomColor: 'transparent',
-                    borderTopColor: 'transparent'
-                }}
-                inputStyle={
-                    {fontSize:hp("2%")}
-                }
+            }
 
-                clearIcon={true}
-                onClearText={() => console.log('onClearText')}
-                onChangeText={(text) => searchFilterFunction(text)}
-                onClear={(text) => searchFilterFunction('')}
-                placeholder='Search..'
-                cancelButtonTitle='Cancel'
-                round
-                searchIcon={{size: 24, color:"orange"}}
-                value={search}
-            />
-        </View>
-        <ScrollView style={{marginBottom:hp("2%")}} >
-        <View style={{marginTop:hp("4%",), flexDirection:"row", alignItems:"center"}}>
-           <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
-           </View>
-            <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
-                GENRE
-            </Text>
 
-        </View>
-        <View>
-            <FlatList style={{marginHorizontal: "3%"}}
-                      data={data}
-                      keyExtractor={item => item.id}
-                      horizontal={true}
-                      renderItem={({
-                                       item, index
-                                   }) => {
-                          return (
-                              <TouchableOpacity
-                                  onPress={() => {
-                                   navigation.navigate("PlayScreen")
-                                  }}>
+                <View style={{marginTop: hp("4%",), flexDirection: "row", alignItems: "center"}}>
+                    <View style={{
+                        height: hp("1%"),
+                        width: wp("1.8%"),
+                        marginLeft: wp("7%"),
+                        backgroundColor: "#FF7303",
+                        borderRadius: Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2),
+                    }}>
+                    </View>
+                    <Text style={{fontSize: hp("1.5%"), fontWeight: "bold", color: "white", marginLeft: wp("1.2%")}}>
+                        GENRE
+                    </Text>
 
-                                      <View style={{height: hp("16%"), width: wp("27%"),justifyContent: "center", marginLeft: wp("7%")}}>
-                                          <Image
-                                              style={{borderRadius: 20, height:"100%", width:"100%", resizeMode:"cover"}}
-                                              source={require("../Images/check.jpg")}/>
-                                      </View>
-                                      <View style={{
-
-                                          width:wp("27%"),
-                                          height:hp("5%"),
-                                          marginLeft: hp("4%"),
-
-                                      }}>
-                                          <Text style={{
-                                            fontWeight:"bold",
-                                              fontSize: hp("2%"),
-                                              color: "white",
-                                              textAlign:"center"
+                </View>
+                <View>
+                    <FlatList style={{marginHorizontal: "3%", marginTop: hp("1%")}}
+                              data={dat}
+                              keyExtractor={item => item.id}
+                              horizontal={true}
+                              renderItem={({
+                                               item, index
+                                           }) => {
+                                  return (
+                                      <TouchableOpacity
+                                          onPress={() => {
+                                              navigation.navigate("CatagoryScreen", {
+                                                  name: item.cateogry_name,
+                                                  songs: item.songs
+                                              })
                                           }}>
-                                              {item.name}
-                                          </Text>
+
+                                          <View style={{
+                                              height: hp("14%"),
+                                              width: wp("27%"),
+                                              justifyContent: "center",
+                                              marginLeft: wp("7%")
+                                          }}>
+                                              <Image
+                                                  style={{
+                                                      borderRadius: 10,
+                                                      height: "100%",
+                                                      width: "100%",
+                                                      resizeMode: "cover"
+                                                  }}
+                                                  source={{uri: item.background_thumb_url}}/>
+                                          </View>
+                                          <View style={{
+
+                                              width: wp("27%"),
+                                              height: hp("5%"),
+                                              marginLeft: hp("4%"),
+
+                                          }}>
+                                              <Text style={{
+                                                  fontSize: hp("2%"),
+                                                  color: "white",
+                                                  textAlign: "center"
+                                              }}>
+                                                  {item.cateogry_name}
+                                              </Text>
 
 
-                                      </View>
+                                          </View>
+
+                                      </TouchableOpacity>
+                                  );
+                              }}
+                    />
+
+                </View>
+                <View style={{marginTop: hp("3%",), flexDirection: "row", alignItems: "center"}}>
+                    <View style={{
+                        height: hp("1%"),
+                        width: wp("1.8%"),
+                        marginLeft: wp("7%"),
+                        backgroundColor: "#FF7303",
+                        borderRadius: Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2),
+                    }}>
+                    </View>
+                    <Text style={{fontSize: hp("1.5%"), fontWeight: "bold", color: "white", marginLeft: wp("1.2%")}}>
+                        TOP NASHEEDS
+                    </Text>
+
+                </View>
+                <View>
+                    <FlatList style={{marginHorizontal: "3%", marginTop: hp("1%")}}
+                              data={topSong}
+                              keyExtractor={item => item.id}
+                              horizontal={true}
+                              renderItem={({
+                                               item, index
+                                           }) => {
+                                  return (
+                                      <TouchableOpacity
+                                          onPress={() => {
+                                              setcheck2(!check2)
+                                              navigation.navigate("DashBoard", {
+                                                  index1: index,
+                                                  pk: topSong,
+                                                  img: item.thumbnail_url
+
+                                              })
+                                          }}>
+
+                                          <View style={{
+                                              height: hp("25%"),
+                                              width: wp("45%"),
+                                              justifyContent: "center",
+                                              marginLeft: wp("7%")
+                                          }}>
+                                              <Image
+                                                  style={{
+                                                      borderRadius: 10,
+                                                      height: "100%",
+                                                      width: "100%",
+                                                      resizeMode: "cover"
+                                                  }}
+                                                  source={{uri: item.thumbnail_url}}/>
+                                          </View>
+                                          <View style={{
+
+                                              width: wp("44%"),
+                                              height: hp("7%"),
+                                              marginLeft: hp("4%"),
+                                              marginTop: hp("0.1%"),
+
+                                          }}>
+                                              <Text numberOfLines={1} style={{
+
+                                                  fontSize: hp("2%"),
+                                                  color: "white",
+                                              }}>
+                                                  {item.title}
+                                              </Text>
+                                              <Text style={{
+                                                  textAlign: "center",
+
+                                                  fontSize: hp("1.5%"),
+                                                  color: "#6E6E6E",
+                                              }}>
+                                                  {item.username}
+                                              </Text>
+
+                                          </View>
 
 
-                              </TouchableOpacity>
-                          );
-                      }}
-            />
+                                      </TouchableOpacity>
+                                  );
+                              }}/>
 
-        </View>
-        <View style={{marginTop:hp("3%",), flexDirection:"row", alignItems:"center"}}>
-            <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
-            </View>
-            <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
-                FAVIROUTE NASHEEDS
-            </Text>
+                </View>
+                <View style={{marginTop: hp("3%",), flexDirection: "row", alignItems: "center"}}>
+                    <View style={{
+                        height: hp("1%"),
+                        width: wp("1.8%"),
+                        marginLeft: wp("7%"),
+                        backgroundColor: "#FF7303",
+                        borderRadius: Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2),
+                    }}>
+                    </View>
+                    <Text style={{fontSize: hp("1.5%"), fontWeight: "bold", color: "white", marginLeft: wp("1.2%")}}>
+                        NEW NASHEEDS
+                    </Text>
 
-        </View>
-        <View>
-            <FlatList style={{marginHorizontal: "3%", marginTop:hp("1%")}}
-                      data={data}
-                      keyExtractor={item => item.id}
-                      horizontal={true}
-                      renderItem={({
-                                       item, index
-                                   }) => {
-                          return (
-                              <TouchableOpacity
-                                  onPress={() => {
-                                      navigation.navigate("PlayScreen")
-                                  }}>
+                </View>
+                <View>
+                    <FlatList style={{marginHorizontal: "3%", marginTop: hp("1%")}}
+                              data={newNasheed}
+                              keyExtractor={item => item.id}
+                              horizontal={true}
+                              renderItem={({
+                                               item, index
+                                           }) => {
+                                  return (
+                                      <TouchableOpacity
+                                          onPress={() => {
+                                              navigation.navigate("PlayScreen", {
+                                                  index1: index,
+                                                  pk: newNasheed,
+                                                  img: item.thumbnail_url
 
-                                  <View style={{height: hp("30%"), width: wp("50%"),justifyContent: "center", marginLeft: wp("7%")}}>
-                                      <Image
-                                          style={{borderRadius: 20, height:"100%", width:"100%", resizeMode:"cover"}}
-                                          source={require("../Images/check.jpg")}/>
-                                  </View>
-                                  <View style={{
+                                              })
+                                          }}>
 
-                                      width:wp("27%"),
-                                      height:hp("7%"),
-                                      marginLeft: hp("4%"),
-                                      marginTop: hp("0.1%"),
-                                  }}>
-                                      <Text style={{
-                                          fontWeight:"bold",
-                                          fontSize: hp("2%"),
-                                          color: "white",
-                                      }}>
-                                          {item.name}
-                                      </Text>
-                                      <Text style={{
+                                          <View style={{
+                                              height: hp("25%"),
+                                              width: wp("45%"),
+                                              justifyContent: "center",
+                                              marginLeft: wp("7%")
+                                          }}>
+                                              <Image
+                                                  style={{
+                                                      borderRadius: 10,
+                                                      height: "100%",
+                                                      width: "100%",
+                                                      resizeMode: "cover"
+                                                  }}
+                                                  source={{uri: item.thumbnail_url}}/>
+                                          </View>
+                                          <View style={{
 
-                                          fontSize: hp("1.5%"),
-                                          color: "#6E6E6E",
-                                      }}>
-                                          {item.email}
-                                      </Text>
+                                              width: wp("44%"),
+                                              height: hp("7%"),
+                                              marginLeft: hp("4%"),
+                                              marginTop: hp("0.1%"),
+                                          }}>
+                                              <Text numberOfLines={1} style={{
 
-                                  </View>
+                                                  fontSize: hp("2%"),
+                                                  color: "white",
+                                              }}>
+                                                  {item.title}
+                                              </Text>
+                                              <Text style={{
 
+                                                  textAlign: "center",
 
-                              </TouchableOpacity>
-                          );
-                      }}/>
+                                                  fontSize: hp("1.5%"),
+                                                  color: "#6E6E6E",
+                                              }}>
+                                                  {item.username}
+                                              </Text>
 
-        </View>
-        <View style={{marginTop:hp("3%",), flexDirection:"row", alignItems:"center"}}>
-            <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
-            </View>
-            <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
-                ARTISTS
-            </Text>
-
-        </View>
-        <View>
-            <FlatList style={{marginHorizontal: "3%", marginTop:hp("1%",)}}
-                      data={data}
-                      keyExtractor={item => item.id}
-                      horizontal={true}
-                      renderItem={({
-                                       item, index
-                                   }) => {
-                          return (
-                              <TouchableOpacity
-                                  onPress={() => {
-                                      navigation.navigate("PlayScreen")
-                                  }}>
-
-                                  <View style={{
-
-                                      marginVertical:hp("0.2%"),
-                                      alignItems:"center",
-                                      paddingLeft:wp("3%"),
-                                      marginBottom:hp("2%"),
+                                          </View>
 
 
-                                  }}>
+                                      </TouchableOpacity>
+                                  );
+                              }}/>
 
-                                      <View style={{
-                                          borderWidth: wp("1.5%"),
-                                          borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,
-                                          justifyContent: "center",
-                                          borderColor:"#FF7303",
-                                          alignItems: "center",
-                                          height:90,
-                                          width:90,
+                </View>
+                <View style={{marginTop: hp("3%",), flexDirection: "row", alignItems: "center"}}>
+                    <View style={{
+                        height: hp("1%"),
+                        width: wp("1.8%"),
+                        marginLeft: wp("7%"),
+                        backgroundColor: "#FF7303",
+                        borderRadius: Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2),
+                    }}>
+                    </View>
+                    <Text style={{fontSize: hp("1.5%"), fontWeight: "bold", color: "white", marginLeft: wp("1.2%")}}>
+                        LATEST NASHEEDS
+                    </Text>
 
+                </View>
+                <View>
+                    <FlatList style={{marginHorizontal: "3%", marginTop: hp("1%")}}
+                              data={latestNasheed}
+                              keyExtractor={item => item.id}
+                              horizontal={true}
+                              renderItem={({
+                                               item, index
+                                           }) => {
+                                  return (
+                                      <TouchableOpacity
+                                          onPress={() => {
+                                              navigation.navigate("PlayScreen", {
+                                                  index1: index,
+                                                  pk: latestNasheed,
+                                                  img: item.thumbnail_url
 
+                                              })
+                                          }}>
 
-                                      }}>
-                                          <Image style={{height: "100%", width: "100%",    borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) , backgroundColor:"lightblue", resizeMode:"cover"}}
-                                                 source={require("../Images/Person.png")}/>
+                                          <View style={{
+                                          height: hp("25%"),
+                                              width: wp("45%"),
+                                              justifyContent: "center",
+                                              marginLeft: wp("7%")
+                                          }}>
+                                              <Image
+                                                  style={{
+                                                      borderRadius: 10,
+                                                      height: "100%",
+                                                      width: "100%",
+                                                      resizeMode: "cover"
+                                                  }}
+                                                  source={{uri: item.thumbnail_url}}/>
+                                          </View>
+                                          <View style={{
 
-                                      </View>
-                                      <View style={{}}>
-                                          <Text style={{marginTop:hp("1%"),color:"yellow"}}>{item.name}</Text>
-                                      </View>
-                                  </View>
-                              </TouchableOpacity>
-                          );
-                      }}/>
+                                              width: wp("45%"),
+                                              height: hp("7%"),
+                                              marginLeft: hp("4%"),
+                                              marginTop: hp("0.1%"),
+                                          }}>
+                                              <Text numberOfLines={1} style={{
+                                                  fontSize: hp("2%"),
+                                                  color: "white",
+                                              }}>
+                                                  {item.title}
+                                              </Text>
+                                              <Text style={{
+                                                    textAlign:"center",
+                                                  fontSize: hp("1.5%"),
+                                                  color: "#6E6E6E",
+                                              }}>
+                                                  {item.username}
+                                              </Text>
 
-        </View>
-        <View style={{ flexDirection:"row", alignItems:"center"}}>
-            <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
-            </View>
-            <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
-                TOP NASHEEDS
-            </Text>
-
-        </View>
-        <View>
-            <FlatList style={{marginHorizontal: "3%", marginTop:hp("1%")}}
-                      data={data}
-                      keyExtractor={item => item.id}
-                      horizontal={true}
-                      renderItem={({
-                                       item, index
-                                   }) => {
-                          return (
-                              <TouchableOpacity
-                                  onPress={() => {
-                                      navigation.navigate("PlayScreen")
-                                  }}>
-
-                                  <View style={{height: hp("16%"), width: wp("27%"),justifyContent: "center", marginLeft: wp("7%")}}>
-                                      <Image
-                                          style={{borderRadius: 20, height:"100%", width:"100%", resizeMode:"cover"}}
-                                          source={require("../Images/check.jpg")}/>
-                                  </View>
-                                  <View style={{
-
-                                      width:wp("27%"),
-                                      height:hp("5%"),
-                                      marginLeft: hp("4%"),
-                                      marginTop: hp("0.1%"),
-                                  }}>
-                                      <Text style={{
-                                          fontWeight:"bold",
-                                          fontSize: hp("2%"),
-                                          color: "white",
-                                          textAlign:"center"
-                                      }}>
-                                          {item.name}
-                                      </Text>
-                                  </View>
-
-
-                              </TouchableOpacity>
-                          );
-                      }}/>
-
-        </View>
-        </ScrollView>
-
-    </SafeAreaView>
+                                          </View>
 
 
-)
+                                      </TouchableOpacity>
+                                  );
+                              }}/>
 
+                </View>
+            </ScrollView>
 
+        </SafeAreaView>
+
+    )
 
 
 }

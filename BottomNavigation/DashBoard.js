@@ -1,205 +1,265 @@
-import React, {useState} from "react";
-import {Dimensions,StyleSheet, Image,SafeAreaView, Text, TouchableOpacity, View} from "react-native";
+import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
+import {Dimensions, StyleSheet, Image, SafeAreaView, Text, TouchableOpacity, View, Button, render} from "react-native";
 import {
     widthPercentageToDP as wp,
     heightPercentageToDP as hp,
 
 } from 'react-native-responsive-screen';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator , BottomTabBar} from '@react-navigation/bottom-tabs';
 import Home from "./Home";
 import Music from "./Music";
-import Files from "./Files";
-import Add from "./Add";
 import Profile from "./Profile";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Octicons from "react-native-vector-icons/Octicons";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import LinearGradient from "react-native-linear-gradient";
-import {Avatar, Badge, Icon,withBadge} from "react-native-elements";
-import Fontisto from "react-native-vector-icons/Fontisto";
-import AntDesign from "react-native-vector-icons/AntDesign";
-import EvilIcons from "react-native-vector-icons/EvilIcons";
-import Entypo from "react-native-vector-icons/Entypo";
+import {clearAsyncStorage, get_data, save_data} from "../AsyncController/Controller";
+import BlogContext from "../ContextApi";
+import Dialog from "react-native-dialog";
 
+import Files from "./Files";
+import MaterialIcons from "react-native-vector-icons/MaterialIcons";
+import Entypo from "react-native-vector-icons/Entypo";
+import {Badge} from "react-native-elements";
+import Fontisto from "react-native-vector-icons/Fontisto";
+import Search from "./Search";
+import Play from "../Play";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 
 
 const Tab = createBottomTabNavigator(
 
 );
-const BadgedIcon = withBadge(12)(Icon);
-const DashBoard=()=>{
-    const [selectedValue, setSelectedValue] = useState("java");
+const TabBarComponent = props => <BottomTabBar {...props} />;
 
 
-    const _renderItem = item => {
-        return (
-            <View style={{height:40, width:50}}>
-                <Text style={{color: "black"}}>{item.label}</Text>
-            </View>
-        );
+
+
+const DashBoard=({route,navigation})=> {
+    const {setHack, hack,topSong,check,check2} = useContext(BlogContext)
+    const {pk,index1} = route.params
+    const [visible, setVisible] = useState(false);
+    console.log("index", index1)
+
+    const showDialog = () => {
+        setVisible(true);
+    };
+
+    const handleCancel = () => {
+        setVisible(false);
+    };
+
+    const handleDelete = () => {
+        clearAsyncStorage()
+        navigation.navigate("SignIn")
+
     };
 
 
-    return(
-
-        <View style={{height:"100%", backgroundColor:"rgba(255, 198, 113, 1)"}}>
-           <Tab.Navigator initialRouteName=" " screenOptions={({ route }) => ({
-               tabBarIcon: ({ focused, color, size }) => {
-               },
-               tabBarActiveTintColor: 'rgba(255, 198, 113, 1)',
-               tabBarInactiveTintColor: 'white',
-               tabBarStyle:{borderTopColor:'rgba(99, 94, 205, 1)',backgroundColor:"#222225"}, headerTintColor:"white",})}>
-               <Tab.Screen  options={{  headerStyle:{
-                       backgroundColor: '#171719'
-
-                   },  headerTitleAlign: "center",
-
-                   alignItems: "center",
-                   headerShadowVisible: false,
-                   headerTitleStyle:{
-                   fontSize:hp("2.5%")
-
-                   },
-
-                   headerLeft:()=>{
+    const sheetRef = useRef(BottomSheet)
+    const snapPoints = useMemo(() => ['25%', '25%', '100%'], []);
 
 
-                   return(
-                     <MaterialIcons style={{marginLeft:wp("2%")}} name="keyboard-arrow-left" color="white" size={25}/>
-                   )
-                   },
-                   headerRight:()=>{
-                   return(
-                   <View style={{flexDirection:"row", alignItems:"center"}}>
+        let state = true
 
-                       <EvilIcons style={{marginRight:wp("1%")}} name={"heart"} size={25} color={"white"}/>
-                       <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={10} color={"white"}/>
+    return (
 
-                   </View>)
+        <SafeAreaView style={{flex: 1, backgroundColor: "black"}}>
+            <View>
+                <Dialog.Container style={{backgroundColor: "red"}} visible={visible}>
+                    <Dialog.Title>Logout</Dialog.Title>
+                    <Dialog.Description>
+                        Do you want to logout this account?.
+                    </Dialog.Description>
+                    <Dialog.Button label="Cancel" onPress={handleCancel}/>
+                    <Dialog.Button label="Logout" onPress={handleDelete}/>
+                </Dialog.Container>
+            </View>
+            <Tab.Navigator
+                initialRouteName=" " screenOptions={({route}) => ({
+                tabBarHideOnKeyboard: true,
+                tabBarIcon: ({focused, color, size}) => {
+                },
+                tabBarActiveTintColor: 'rgba(255, 198, 113, 1)',
+                tabBarInactiveTintColor: 'white',
+                tabBarStyle: {borderTopColor: 'rgba(99, 94, 205, 1)', backgroundColor: "#222225"},
+                headerTintColor: "white",
 
-                   },
+            })} tabBar={(props) => (
+                <>
+                   {check2=== true  ? <Play index1={index1} pk={pk}/> :null}
+                        <TabBarComponent {...props} style={{ borderTopColor: '#605F60' }} />
+                </>
+            )}>
 
-                   tabBarIcon: ({ focused, color, size }) => {
-                       return <FontAwesome5 style={{textAlignVertical:"center"}} name="music" size={25} color={color}  />;
-                   }, }}  name="Playlist" component={Music}  />
-               <Tab.Screen options={{headerStyle:{
-                       backgroundColor: '#171719'
+                <Tab.Screen options={{
+                    headerStyle: {
+                        backgroundColor: '#171719'
 
-                   },  headerTitleAlign: "center",
+                    }, headerTitleAlign: "center",
 
-                   alignItems: "center",
-                   headerShadowVisible: false,
-                   headerTitleStyle:{
-                       fontSize:hp("2.5%")
+                    alignItems: "center",
+                    headerShadowVisible: false,
+                    headerTitleStyle: {
+                        fontSize: hp("2.5%")
 
-                   },   headerRight:()=>{
-                       return(
-                           <View style={{flexDirection:"row", alignItems:"center"}}>
-                               <Fontisto style={{marginRight:wp("2%")}} name={"bell"} color={"white"} size={25}/>
-                               <Badge
-                                   status="error"
-                                   badgeStyle={{backgroundColor:"yellow"}}
-                                   containerStyle={{position: 'absolute', top: 2, right:wp("9%") }}
-                               />
+                    },
 
+                    // headerLeft:()=>{
+                    //
+                    //
+                    // return(
+                    //   <MaterialIcons style={{marginLeft:wp("2%")}} name="keyboard-arrow-left" color="white" size={25}/>
+                    // )
+                    // },
+                    // headerRight:()=>{
+                    // return(
+                    // <View style={{flexDirection:"row", alignItems:"center"}}>
+                    //
+                    //     <EvilIcons style={{marginRight:wp("1%")}} name={"heart"} size={25} color={"white"}/>
+                    //     <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={10} color={"white"}/>
+                    //
+                    // </View>)
+                    //
+                    // },
 
-                               <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={14} color={"white"}/>
+                    tabBarIcon: ({focused, color, size}) => {
+                        return <FontAwesome5 style={{textAlignVertical: "center"}} name="music" size={20}
+                                             color={color}/>;
+                    },
+                }} name="Playlist" component={Music}/>
+                <Tab.Screen options={{headerStyle:{
+                        backgroundColor: '#171719'
 
-                           </View>)
+                    },  headerTitleAlign: "center",
 
-                   },   headerLeft:()=>{
+                    alignItems: "center",
+                    headerShadowVisible: false,
+                    headerTitleStyle:{
+                        fontSize:hp("2.5%")
 
-
-                       return(
-                           <MaterialIcons style={{marginLeft:wp("2%")}} name="keyboard-arrow-left" color="white" size={25}/>
-                       )
-                   },tabBarIcon: ({ focused, color, size }) => {
-                   return <MaterialIcons style={{textAlignVertical:"center"}} name="folder-open" size={25} color={color}  />;
-                   }, }}  name="Files" component={Files}  />
-               <Tab.Screen options={{headerStyle:{
-                       backgroundColor: '#171719',
-
-
-
-                   },headerRight:()=>{
-                      return(
-                          <SafeAreaView style={{flexDirection:"row"}}>
-
-
-
-                          <View style={{marginRight:wp("4%"), flexDirection:"row", alignItems:"center"}}>
-                              <Fontisto name={"bell"} color={"white"} size={25}/>
-                              <Badge
-                                  status="error"
-                                  containerStyle={{ position: 'absolute', top: 2, right:wp("0.2%") }}
-                              />
-                          </View>
-                              <View style={{flexDirection:"row"}} >
-
-                                  <TouchableOpacity
-
-                                      style={styles.iconContainer}
-                                      onPress={() => alert("ff")}
-                                  >
-                                      <LinearGradient style={{ borderRadius:hp("2%", ), flexDirection:"row", alignItems:"center", marginRight:"10%"}}  colors={["#FFD303", "#FF3803"]}>
-                                          <MaterialIcons name={"arrow-drop-down"} color={"black"} size={25}/>
-
-                                          <View style={{
-                                              height: hp("4%"),
-                                            width:wp("7%"),
-                                              marginVertical:hp("0.2%"),
-
-                                          }}>
-                                              <View style={{
-
-                                                  borderWidth: wp("0.8%"),
-                                                  borderColor: "black",
-                                                  borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,
-                                                  justifyContent: "center",
-                                                  alignItems: "center"
-                                              }}>
-                                                  <Image style={{height: "100%", width: "100%", borderRadius: 200, backgroundColor:"lightblue"}}
-                                                         source={require("../Images/Person.png")}/>
-                                              </View>
-                                          </View>
+                    },   headerRight:()=>{
+                        return(
+                            <View style={{flexDirection:"row", alignItems:"center"}}>
+                                <Fontisto style={{marginRight:wp("2%")}} name={"bell"} color={"white"} size={25}/>
+                                <Badge
+                                    status="error"
+                                    badgeStyle={{backgroundColor:"yellow"}}
+                                    containerStyle={{position: 'absolute', top: 2, right:wp("9%") }}
+                                />
 
 
+                                <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={14} color={"white"}/>
 
-                                      </LinearGradient>
+                            </View>)
 
-                                  </TouchableOpacity>
-
-                              </View>
-
-                          </SafeAreaView>
-                      )
-
-                   }, headerLeft: () =>
-
-                       <Image style={{marginLeft: wp("5%")}}
-                                       source={require("../Images/Name.png")}/>
-                       , tabBarIcon: ({ focused, color, size }) => {
-                       return( <View style={{justifyContent:"center", alignItems:"center", height:hp("7%"), width:wp("12%"), borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2)}}>
-                           <LinearGradient colors={["#FFD303", "#FF3803"]} style={{
-                               top:-20, justifyContent:"center", alignItems:"center", height:53, width:50, borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2)
-                           }}>
-                               <MaterialCommunityIcons name={"home"} color={"white"} size={25}/>
-                           </LinearGradient>
-                       </View>);
-                   } }}  name=" " component={Home}  />
-               <Tab.Screen  options={{headerShown:false,    tabBarIcon: ({ focused, color, size }) => {
-                       return <Octicons style={{textAlignVertical:"center"}} name="plus" size={25} color={color}  />;
-                   }}}  name="   " component={Add}  />
-               <Tab.Screen options={{headerShown:false,   tabBarIcon: ({ focused, color, size }) => {
-                       return <Ionicons style={{textAlignVertical:"center"}} name="person-circle-outline" size={25} color={color}  />;
-                   }, }}  name="Profile" component={Profile}  />
-           </Tab.Navigator>
+                    },   headerLeft:()=>{
 
 
-        </View>
+                        return(
+                            <MaterialIcons style={{marginLeft:wp("2%")}} name="keyboard-arrow-left" color="white" size={25}/>
+                        )
+                    },tabBarIcon: ({ focused, color, size }) => {
+                        return <Fontisto style={{textAlignVertical:"center"}} name="bell" size={22} color={color}  />;
+                    }, }}  name="Notification" component={Files}  />
+                <Tab.Screen options={{
+                    headerStyle: {
+                        backgroundColor: '#171719',
+
+
+                    }, headerRight: () => {
+                        return (
+
+                            <SafeAreaView style={{flexDirection: "row"}}>
+                                {hack === null ?  <Ionicons onPress={()=> navigation.navigate("DashBoard", {
+                                    screen:"Search"
+                                    })} style={{marginRight:hp("2%")}} name="search" size={20} color={"white"}  /> :
+
+                                    <View style={{flexDirection: "row"}}>
+
+                                        <TouchableOpacity
+
+                                            style={styles.iconContainer}
+                                            onPress={() => showDialog()}
+                                        >
+                                            <View style={{
+                                                borderRadius: hp("2%",),
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                marginRight: "10%",
+                                                backgroundColor: "#FF7303"
+                                            }}>
+
+
+                                                <View style={{
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+
+
+                                                    marginHorizontal: hp("2%"),
+
+                                                }}>
+                                                    <Text style={{color: "black"}}>Logout</Text>
+                                                </View>
+                                            </View>
+
+                                        </TouchableOpacity>
+
+                                    </View>
+
+                                }
+                            </SafeAreaView>
+                        )
+
+                    }, headerLeft: () =>
+                        <Image style={{marginLeft: wp("5%")}}
+                               source={require("../Images/Name.png")}/>
+
+
+                    ,
+
+                    tabBarIcon: ({focused, color, size}) => {
+                        return (<View style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            height: hp("7%"),
+                            width: wp("12%"),
+                            borderRadius: Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2)
+                        }}>
+                            <View style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                                height: 53,
+                                width: 50,
+                                borderRadius: Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2)
+                            }}>
+                                <MaterialCommunityIcons name={"home"} color={color} size={30}/>
+                            </View>
+                        </View>);
+                    }
+                }} name=" " component={Home}/>
+                <Tab.Screen   options={{ headerShown:true, headerStyle:{
+                        backgroundColor: '#171719',
+
+
+
+                    } ,headerTitleAlign: "center", tabBarIcon: ({ focused, color, size }) => {
+
+                        return <Ionicons style={{textAlignVertical:"center"}} name="search" size={25} color={color}  />;
+                    }}}  name="Search" component={Search}  />
+                <Tab.Screen options={{
+                    headerShown: false, tabBarIcon: ({focused, color, size}) => {
+                        return <Ionicons style={{textAlignVertical: "center"}} name="person-circle-outline" size={25}
+                                         color={color}/>;
+                    },
+                }} name="Profile" component={Profile}/>
+
+            </Tab.Navigator>
+
+
+
+        </SafeAreaView>
 
     )
 }

@@ -1,4 +1,4 @@
-import React, {useRef, useEffect, useState} from 'react';
+import React, {useRef, useEffect, useState, useContext} from 'react';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
 import {
@@ -11,152 +11,102 @@ import {
 } from 'react-native';
 
 import TrackPlayer, {
+    Capability,
 
     usePlaybackState,
-    TrackPlayerEvents,
 } from 'react-native-track-player';
 
-import songs from "./check/data";
 import Controller from "./check/Controller";
 import SliderComp from "./check/SliderComp";
-import {PLAYBACK_TRACK_CHANGED} from 'react-native-track-player/lib/eventTypes';
-import MaterialIcons from "react-native-vector-icons/MaterialIcons";
-import Entypo from "react-native-vector-icons/Entypo";
-import EvilIcons from "react-native-vector-icons/EvilIcons";
-import {useNavigation} from "@react-navigation/native";
+
+
 
 const {width, height} = Dimensions.get('window');
-
-
-
 const TRACK_PLAYER_CONTROLS_OPTS = {
+
     waitforBuffer: true,
-    stopWithApp: false,
-    alwaysPauseOnInterruption: true,
+    stopWithApp: true,
+    alwaysPauseOnInterruption: false,
     capabilities: [
-        TrackPlayer.CAPABILITY_PLAY,
-        TrackPlayer.CAPABILITY_PAUSE,
-        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
-        TrackPlayer.CAPABILITY_SEEK_TO,
+        Capability.Play,
+        Capability.Pause,
+        Capability.SkipToNext,
+        Capability.SkipToPrevious,
+        Capability.Stop,
     ],
-    compactCapabilities: [
-        TrackPlayer.CAPABILITY_PLAY,
-        TrackPlayer.CAPABILITY_PAUSE,
-        TrackPlayer.CAPABILITY_SKIP_TO_NEXT,
-        TrackPlayer.CAPABILITY_SKIP_TO_PREVIOUS,
-    ],
-};
 
-const PlayScreen =()=> {
-    const navigation = useNavigation()
+    compactCapabilities:[
+        Capability.Play,
+        Capability.Pause,
+        Capability.SkipToNext,
+        Capability.SkipToPrevious,
+        Capability.Stop,
+    ]
+
+}
+
+const PlayScreen =({index1, pk})=> {
+
+    // const {pk,index1,img} = route.params
     const scrollX = useRef(new Animated.Value(0)).current;
-
+    const refRBSheet = useRef();
     const slider = useRef(null);
     const isPlayerReady = useRef(false);
-    const index = useRef(0);
-
-    const [songIndex, setSongIndex] = useState(0);
-
+    const index = useRef(index1);
+    const[state, newState] = useState(null)
+    const [songIndex, setSongIndex] = useState(index1);
     const isItFromUser = useRef(true);
-
-    // for tranlating the album art
     const position = useRef(Animated.divide(scrollX, width)).current;
-    const playbackState = usePlaybackState();
+    const playbackState = usePlaybackState()
 
+
+
+    const skipTo = async (trackId)=>{
+        await TrackPlayer.skip((trackId))
+    }
     useEffect(() => {
-        // position.addListener(({ value }) => {
-        //   console.log(value);
-        // });
 
-        scrollX.addListener(({value}) => {
-            const val = Math.round(value / width);
-
-            setSongIndex(val);
-        });
 
         TrackPlayer.setupPlayer().then(async () => {
-            // The player is ready to be used
-            console.log('Player ready');
-            // add the array of songs in the playlist
-            await TrackPlayer.reset();
-            await TrackPlayer.add(songs);
-            TrackPlayer.play();
+
+            await TrackPlayer.reset()
+            await TrackPlayer.add(pk);
+            await TrackPlayer.skip((index1))
             isPlayerReady.current = true;
-
             await TrackPlayer.updateOptions(TRACK_PLAYER_CONTROLS_OPTS);
+            await TrackPlayer.play()
 
-            //add listener on track change
-            TrackPlayer.addEventListener(PLAYBACK_TRACK_CHANGED, async e => {
-                console.log('song ended', e);
-
-                const trackId = (await TrackPlayer.getCurrentTrack()) - 1; //get the current id
-
-                console.log('track id', trackId, 'index', index.current);
-
-                if (trackId !== index.current) {
-                    setSongIndex(trackId);
-                    isItFromUser.current = false;
-
-                    if (trackId > index.current) {
-                        goNext();
-                    } else {
-                        goPrv();
-                    }
-                    setTimeout(() => {
-                        isItFromUser.current = true;
-                    }, 200);
-                }
-
-                // isPlayerReady.current = true;
-            });
-
-            // monitor intterupt when other apps start playing music
-            TrackPlayer.addEventListener(TrackPlayerEvents.REMOTE_DUCK, e => {
-                // console.log(e);
-                if (e.paused) {
-                    // if pause true we need to pause the music
-                    TrackPlayer.pause();
-                } else {
-                    TrackPlayer.play();
-                }
+            scrollX.addListener(({value}) => {
+                const val = Math.round(value / width);
+                skipTo(val)
+                setSongIndex(val);
             });
         });
 
         return () => {
             scrollX.removeAllListeners();
-            TrackPlayer.destroy();
+
 
             // exitPlayer();
         };
     }, [scrollX]);
 
-    // change the song when index changes
-    useEffect(() => {
-        if (isPlayerReady.current && isItFromUser.current) {
-            TrackPlayer.skip(songs[songIndex].id)
-                .then(_ => {
-                    console.log('changed track');
-                })
-                .catch(e => console.log('error in changing track ', e));
-        }
-        index.current = songIndex;
-    }, [songIndex]);
+    const GoNxt =()=>{
+        slider.current.scrollToOffset(
+            {
+                offset:(songIndex+1)*width
+            }
 
-    const goNext = async () => {
-        slider.current.scrollToOffset({
-            offset: (index.current + 1) * width,
-        });
+        )
+    }
+    const GoPrev =()=>{
+        slider.current.scrollToOffset(
+            {
+                offset:(songIndex-1)*width
+            }
 
-        await TrackPlayer.play();
-    };
-    const goPrv = async () => {
-        slider.current.scrollToOffset({
-            offset: (index.current - 1) * width,
-        });
-
-        await TrackPlayer.play();
-    };
+        )
+    }
 
     const renderItem = ({index, item}) => {
         return (
@@ -174,30 +124,24 @@ const PlayScreen =()=> {
                     ],
                 }}>
                 <Animated.Image
-                    source={item.artwork}
-                    style={{width: 320, height: 320, borderRadius: 5}}
+                    source={{uri:pk[songIndex].thumbnail_url}}
+                    style={{width: 250, height: 250, borderRadius: 10, marginTop:hp("8%")}}
                 />
             </Animated.View>
         );
     };
 
     return (
-        <SafeAreaView style={{flex: 1, backgroundColor: "black"}}>
+
+        <SafeAreaView style={{ backgroundColor: "black"}}>
+
             <View style={{flexDirection: "row", justifyContent: "space-around", marginTop: hp("5%")}}>
-                <View>
-                    <MaterialIcons  onPress={()=>navigation.navigate("DashBoard")} style={{marginLeft: wp("2%")}} name="keyboard-arrow-left" color="white" size={27}/>
-                </View>
+
+
                 <View style={{width: hp("27%"), flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
-                    <Text numberOfLines={1} style={{textAlign: "center", fontSize: hp("2%"), color: "white"}}>
-                        Tum Shehar e Aman kallp sdskd
-                    </Text>
 
                 </View>
 
-                <View style={{flexDirection: "row", alignItems: "center"}}>
-                    <EvilIcons style={{}} name="heart" color="white" size={20}/>
-                    <Entypo style={{marginLeft: hp("1%")}} name={"dots-three-vertical"} size={15} color={"white"}/>
-                </View>
             </View>
 
             <SafeAreaView style={styles.container}>
@@ -208,22 +152,23 @@ const PlayScreen =()=> {
                         pagingEnabled
                         showsHorizontalScrollIndicator={false}
                         scrollEventThrottle={16}
-                        data={songs}
+                        data={pk}
                         renderItem={renderItem}
                         keyExtractor={item => item.id}
                         onScroll={Animated.event(
                             [{nativeEvent: {contentOffset: {x: scrollX}}}],
                             {useNativeDriver: true},
                         )}
+
                     />
                 </SafeAreaView>
                 <View>
-                    <Text style={styles.title}>{songs[songIndex].title}</Text>
-                    <Text style={styles.artist}>{songs[songIndex].artist}</Text>
+                    <Text style={styles.title}>{pk[songIndex].title}</Text>
+                    <Text style={styles.artist} >{pk[songIndex].artist}</Text>
                 </View>
 
                 <SliderComp />
-                <Controller onNext={goNext} onPrv={goPrv} />
+                <Controller onNext={GoNxt} onPrv={GoPrev} />
             </SafeAreaView>
         </SafeAreaView>
     )
@@ -232,10 +177,10 @@ const PlayScreen =()=> {
 }
 const styles = StyleSheet.create({
     title: {
-        fontSize: 28,
+        fontSize:hp("2%"),
         textAlign: 'center',
-        fontWeight: '600',
-        textTransform: 'capitalize',
+        marginHorizontal:wp("15%"),
+
         color: '#ffffff',
     },
     artist: {

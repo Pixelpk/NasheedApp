@@ -1,64 +1,55 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {Dimensions, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import {SearchBar} from "react-native-elements";
 import LinearGradient from "react-native-linear-gradient";
 import Entypo from "react-native-vector-icons/Entypo";
+import BlogContext from "../ContextApi";
 
 
 const TopNasheeds =()=>{
-
-    const data = [
-        {
-            name: "Tum Shehar e Aman ksas",
-            email: "2 days ago",
-            color: "red"
-
-
-        },
-        {
-            name: "Tekken Tournament held at VisionX",
-            email: "2 days ago",
-            color: "yellow"},
-
-        {
-            name: "Tekken Tournament held at VisionX",
-            email: "1 day ago",
-            color:"green"
-
-        },
-
-
-
-
-    ]
+    const {topSong} = useContext(BlogContext)
 
     const [search, setSearch] = useState('');
-    const [filteredDataSource, setFilteredDataSource] = useState([]);
-    const [masterDataSource, setMasterDataSource] = useState([]);
+    const [check, setcheck] = useState(null);
+    const [title, setTitle] = useState(null);
+    const [filteredDataSource, setFilteredDataSource] = useState(topSong);
+    const [masterDataSource, setMasterDataSource] = useState(topSong)
     const navigation = useNavigation()
 
 
     const searchFilterFunction = (text) => {
 
         if (text) {
-
             const newData = masterDataSource.filter(function (item) {
+
                 const itemData = item.title
                     ? item.title.toUpperCase()
                     : ''.toUpperCase();
                 const textData = text.toUpperCase();
-                return itemData.indexOf(textData) > -1;
+
+                return itemData.indexOf(textData)>-1 ;
+
             });
             setFilteredDataSource(newData);
             setSearch(text);
-        } else {
+        }
+        else {
             setFilteredDataSource(masterDataSource);
             setSearch(text);
+
         }
+
     };
 
+
+    const getItem = (item) => {
+
+        setTitle(item.id)
+        var hack  = topSong.findIndex( (element) => element.id === title);
+        return hack
+        }
 
     return(
         <SafeAreaView style={{ backgroundColor:"black", height:"100%", width:"100%"}}>
@@ -81,7 +72,6 @@ const TopNasheeds =()=>{
                     inputStyle={
                         {fontSize:hp("2%")}
                     }
-
                     clearIcon={true}
                     onClearText={() => console.log('onClearText')}
                     onChangeText={(text) => searchFilterFunction(text)}
@@ -99,36 +89,37 @@ const TopNasheeds =()=>{
                 <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
                     Top Nasheeds
                 </Text>
-
             </View>
 
 
             <FlatList style={{marginHorizontal:"6%", marginBottom:hp("2%")}}
-                      data={data}
+                      data={filteredDataSource}
                       keyExtractor={item => item.id}
                       renderItem={({item, index}) => {
+
                           return (
 
                               <TouchableOpacity
-                                  onPress={() => {
-                                      navigation.navigate("PlayScreen")
 
+                                  onPress={() => {
+
+                                      navigation.navigate("PlayScreen", {
+                                          index1:  topSong.findIndex( (element) => element.id === item.id),
+                                          pk: topSong,
+                                          img: item.thumbnail_url
+
+                                      })
                                   }}>
                                   <View style={{flexDirection:"row" ,borderRadius:8, marginTop:20, paddingBottom:2, backgroundColor:"#1F1F21"}}>
 
                                       <View style={{justifyContent:"center"}}>
-                                          <Image source={require("../Images/check.jpg")} style={{height:72,width:72, borderRadius:8}}/>
+                                          <Image source={{uri:item.thumbnail_url}} style={{height:72,width:72, borderRadius:8}}/>
                                       </View>
                                       <View style={{flex:1, justifyContent:"center", marginLeft:12}}>
                                           <Text numberOfLines={1} style= {{width:wp("40%"),fontFamily:"Poppins-Bold",  fontSize:14, color:"white", justifyContent:"center"}}>
-                                              {item.name}
+                                              {item.title}
                                           </Text>
-                                          <Text style={{ fontSize: 9, fontFamily:"Poppins-Regular",color:"white"}}>
-                                              {item.email}
-                                          </Text>
-                                          <Text style={{ fontSize: 9, fontFamily:"Poppins-Regular",color:"white"}}>
-                                              {item.color}
-                                          </Text>
+
                                       </View>
                                       <View style={{width:wp("15%"),flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
                                           <LinearGradient colors={["#FFD303", "#FF3803"]} style={{
@@ -138,7 +129,7 @@ const TopNasheeds =()=>{
 
                                           </LinearGradient>
                                           <View style={{marginLeft:wp("3%")}}>
-                                              <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={15} color={"#AAAAAA"}/>
+                                              {/*<Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={15} color={"#AAAAAA"}/>*/}
                                           </View>
                                       </View>
                                   </View>

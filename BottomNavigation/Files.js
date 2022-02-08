@@ -1,9 +1,9 @@
 import React, {useState} from "react";
 import {Dimensions, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-import Popular from "../TabNavigation/Popular";
+import Popular from "../TabNavigation/LatestNasheeds";
 import TopNasheeds from "../TabNavigation/TopNasheeds";
-import Favourite from "../TabNavigation/Favourite";
+import Favourite from "../TabNavigation/NewNasheeds";
 import Albums from "../TabNavigation/Albums";
 import {createMaterialTopTabNavigator} from "@react-navigation/material-top-tabs";
 import {useNavigation} from "@react-navigation/native";
@@ -107,139 +107,136 @@ const Files =()=>{
     return(
         <SafeAreaView style={{ backgroundColor:"black", height:"100%", width:"100%"}}>
 
-            <View style={{marginTop:hp("1%")}}>
+           {/* <View style={{marginTop:hp("1%")}}>*/}
 
-                <SearchBar
-                    inputContainerStyle={{backgroundColor: '#222225', borderRadius:20}}
+           {/*     <SearchBar*/}
+           {/*         inputContainerStyle={{backgroundColor: '#222225', borderRadius:20}}*/}
 
-                    showLoading={false}
+           {/*         showLoading={false}*/}
 
-                    containerStyle={{
-                        backgroundColor: 'black',
-                        marginHorizontal: 15,
-                        borderWidth: 0,
-                        shadowColor: "#000",
-                        borderBottomColor: 'transparent',
-                        borderTopColor: 'transparent'
-                    }}
-                    inputStyle={
-                        {fontSize:hp("2%")}
-                    }
+           {/*         containerStyle={{*/}
+           {/*             backgroundColor: 'black',*/}
+           {/*             marginHorizontal: 15,*/}
+           {/*             borderWidth: 0,*/}
+           {/*             shadowColor: "#000",*/}
+           {/*             borderBottomColor: 'transparent',*/}
+           {/*             borderTopColor: 'transparent'*/}
+           {/*         }}*/}
+           {/*         inputStyle={*/}
+           {/*             {fontSize:hp("2%")}*/}
+           {/*         }*/}
 
-                    clearIcon={true}
-                    onClearText={() => console.log('onClearText')}
-                    onChangeText={(text) => searchFilterFunction(text)}
-                    onClear={(text) => searchFilterFunction('')}
-                    placeholder='Search..'
-                    cancelButtonTitle='Cancel'
-                    round
-                    searchIcon={{size: 24, color:"orange"}}
-                    value={search}
-                />
-            </View>
-           <View>
-               <FlatList style={{marginHorizontal: "3%", marginTop:"2%"}}
-                          data={data}
-                          keyExtractor={item => item.id}
-                          horizontal={true}
-                          renderItem={({
-                                           item, index
-                                       }) => {
-                              return (
-                                  <TouchableOpacity
-                                      onPress={() => {
-                                          alert("working")
-                                      }}>
+           {/*         clearIcon={true}*/}
+           {/*         onClearText={() => console.log('onClearText')}*/}
+           {/*         onChangeText={(text) => searchFilterFunction(text)}*/}
+           {/*         onClear={(text) => searchFilterFunction('')}*/}
+           {/*         placeholder='Search..'*/}
+           {/*         cancelButtonTitle='Cancel'*/}
+           {/*         round*/}
+           {/*         searchIcon={{size: 24, color:"orange"}}*/}
+           {/*         value={search}*/}
+           {/*     />*/}
+           {/* </View>*/}
+           {/*<View>*/}
+           {/*    <FlatList style={{marginHorizontal: "3%", marginTop:"2%"}}*/}
+           {/*               data={data}*/}
+           {/*               keyExtractor={item => item.id}*/}
+           {/*               horizontal={true}*/}
+           {/*               renderItem={({*/}
+           {/*                                item, index*/}
+           {/*                            }) => {*/}
+           {/*                   return (*/}
+           {/*                       <TouchableOpacity*/}
+           {/*                           onPress={() => {*/}
+           {/*                               alert("working")*/}
+           {/*                           }}>*/}
 
-                                      <View style={{height: hp("16%"), width: wp("27%"),justifyContent: "center", marginLeft: wp("5%")}}>
-                                          <Image
-                                              style={{borderRadius: 20, height:"100%", width:"100%", resizeMode:"cover"}}
-                                              source={require("../Images/check.jpg")}/>
-                                      </View>
-                                      <View style={{
+           {/*                           <View style={{height: hp("16%"), width: wp("27%"),justifyContent: "center", marginLeft: wp("5%")}}>*/}
+           {/*                               <Image*/}
+           {/*                                   style={{borderRadius: 20, height:"100%", width:"100%", resizeMode:"cover"}}*/}
+           {/*                                   source={require("../Images/check.jpg")}/>*/}
+           {/*                           </View>*/}
+           {/*                           <View style={{*/}
 
-                                          width:wp("27%"),
-                                          height:hp("5%"),
-                                          marginLeft: hp("4%"),
+           {/*                               width:wp("27%"),*/}
+           {/*                               height:hp("5%"),*/}
+           {/*                               marginLeft: hp("4%"),*/}
 
-                                      }}>
-                                          <Text style={{
-                                              fontWeight:"bold",
-                                              fontSize: hp("2%"),
-                                              color: "white",
-                                              textAlign:"center"
-                                          }}>
-                                              {item.color}
-                                          </Text>
-
-
-                                      </View>
+           {/*                           }}>*/}
+           {/*                               <Text style={{*/}
+           {/*                                   fontWeight:"bold",*/}
+           {/*                                   fontSize: hp("2%"),*/}
+           {/*                                   color: "white",*/}
+           {/*                                   textAlign:"center"*/}
+           {/*                               }}>*/}
+           {/*                                   {item.color}*/}
+           {/*                               </Text>*/}
 
 
-                                  </TouchableOpacity>
-                              );
-                          }}
-                />
-           </View>
-            <View style={{marginTop:hp("2%",), flexDirection:"row", alignItems:"center"}}>
-                <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>
-                </View>
-                <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>
-                    Top List
-                </Text>
-
-            </View>
+           {/*                           </View>*/}
 
 
-            <FlatList style={{marginHorizontal:"6%", marginBottom:hp("2%")}}
-                      data={data}
-                      keyExtractor={item => item.id}
-                      renderItem={({item, index}) => {
-                          return (
+           {/*                       </TouchableOpacity>*/}
+           {/*                   );*/}
+           {/*               }}*/}
+           {/*     />*/}
+           {/*</View>*/}
+           {/* <View style={{marginTop:hp("2%",), flexDirection:"row", alignItems:"center"}}>*/}
+           {/*     <View style={{height:hp("1%"), width:wp("1.8%"), marginLeft:wp("7%"), backgroundColor:"#FF7303",borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2) ,}}>*/}
+           {/*     </View>*/}
+           {/*     <Text style={{fontSize:hp("2%"), fontWeight:"bold", color:"white", marginLeft:wp("1.2%")}}>*/}
+           {/*         Top List*/}
+           {/*     </Text>*/}
 
-                              <TouchableOpacity
-                                  onPress={() => {
-                                      navigation.navigate("DiscoveryInfo")
+           {/* </View>*/}
 
-                                  }}>
-                                  <View style={{flexDirection:"row" ,borderRadius:8, marginTop:20, paddingBottom:2, backgroundColor:"#1F1F21"}}>
 
-                                      <View style={{justifyContent:"center"}}>
-                                          <Image source={require("../Images/check.jpg")} style={{height:72,width:72, borderRadius:8}}/>
-                                      </View>
-                                      <View style={{flex:1, justifyContent:"center", marginLeft:12}}>
-                                          <Text numberOfLines={1} style= {{width:wp("40%"),fontFamily:"Poppins-Bold",  fontSize:14, color:"white", justifyContent:"center"}}>
-                                              {item.name}
-                                          </Text>
-                                          <Text style={{ fontSize: 9, fontFamily:"Poppins-Regular",color:"white"}}>
-                                              {item.email}
-                                          </Text>
-                                          <Text style={{ fontSize: 9, fontFamily:"Poppins-Regular",color:"white"}}>
-                                              {item.color}
-                                          </Text>
-                                      </View>
-                                      <View style={{width:wp("15%"),flexDirection:"row", justifyContent:"center", alignItems:"center"}}>
-                                          <LinearGradient colors={["#FFD303", "#FF3803"]} style={{
-                                              justifyContent:"center", alignItems:"center", height:40, width:40, borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2)
-                                          }}>
-                                              <Entypo name={"controller-play"} color={"white"} size={25}/>
+           {/* <FlatList style={{marginHorizontal:"6%", marginBottom:hp("2%")}}*/}
+           {/*           data={data}*/}
+           {/*           keyExtractor={item => item.id}*/}
+           {/*           renderItem={({item, index}) => {*/}
+           {/*               return (*/}
 
-                                          </LinearGradient>
-                                          <View style={{marginLeft:wp("3%")}}>
-                                              <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={15} color={"#AAAAAA"}/>
-                                          </View>
-                                      </View>
-                                  </View>
-                              </TouchableOpacity>
-                          );
-                      }}
-            />
+           {/*                   <TouchableOpacity*/}
+           {/*                       onPress={() => {*/}
+           {/*                           navigation.navigate("DiscoveryInfo")*/}
+
+           {/*                       }}>*/}
+           {/*                       <View style={{flexDirection:"row" ,borderRadius:8, marginTop:20, paddingBottom:2, backgroundColor:"#1F1F21"}}>*/}
+
+           {/*                           <View style={{justifyContent:"center"}}>*/}
+           {/*                               <Image source={require("../Images/check.jpg")} style={{height:72,width:72, borderRadius:8}}/>*/}
+           {/*                           </View>*/}
+           {/*                           <View style={{flex:1, justifyContent:"center", marginLeft:12}}>*/}
+           {/*                               <Text numberOfLines={1} style= {{width:wp("40%"),fontFamily:"Poppins-Bold",  fontSize:14, color:"white", justifyContent:"center"}}>*/}
+           {/*                                   {item.name}*/}
+           {/*                               </Text>*/}
+           {/*                               <Text style={{ fontSize: 9, fontFamily:"Poppins-Regular",color:"white"}}>*/}
+           {/*                                   {item.email}*/}
+           {/*                               </Text>*/}
+           {/*                               <Text style={{ fontSize: 9, fontFamily:"Poppins-Regular",color:"white"}}>*/}
+           {/*                                   {item.color}*/}
+           {/*                               </Text>*/}
+           {/*                           </View>*/}
+           {/*                           <View style={{width:wp("15%"),flexDirection:"row", justifyContent:"center", alignItems:"center"}}>*/}
+           {/*                               <LinearGradient colors={["#FFD303", "#FF3803"]} style={{*/}
+           {/*                                   justifyContent:"center", alignItems:"center", height:40, width:40, borderRadius:Math.round((Dimensions.get('window').height + Dimensions.get('window').width) / 2)*/}
+           {/*                               }}>*/}
+           {/*                                   <Entypo name={"controller-play"} color={"white"} size={25}/>*/}
+
+           {/*                               </LinearGradient>*/}
+           {/*                               <View style={{marginLeft:wp("3%")}}>*/}
+           {/*                                   <Entypo style={{marginRight:wp("4%")}} name={"dots-three-vertical"} size={15} color={"#AAAAAA"}/>*/}
+           {/*                               </View>*/}
+           {/*                           </View>*/}
+           {/*                       </View>*/}
+           {/*                   </TouchableOpacity>*/}
+           {/*               );*/}
+           {/*           }}*/}
+           {/* />*/}
 
         </SafeAreaView>
 
     )
-
-
-
 }
 export default Files

@@ -1,13 +1,23 @@
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 import {Text, SafeAreaView, View, Image, ImageBackground} from "react-native";
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
+import {get_data} from "./AsyncController/Controller";
+import BlogContext from "./ContextApi";
+
+
 
 
 const Splash = (navigation) => {
+     const {hack, setHack} = useContext(BlogContext)
+
+
     useEffect(() => {
             setTimeout(() => {
-                navigation.navigation.replace("SignIn");
-            }, 3000);
+                navigation.navigation.replace("DashBoard", {
+                    index1: 0,
+                    pk: 0,
+                });
+            }, 5000);
 
         },
     );

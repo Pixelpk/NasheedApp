@@ -1,10 +1,8 @@
-import React, {useState} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import {
-    Dimensions,
     Image,
     KeyboardAvoidingView, Platform,
     SafeAreaView,
-    ScrollView,
     StyleSheet,
     Text,
     TextInput,
@@ -19,6 +17,8 @@ import * as Yup from "yup";
 import {Formik} from 'formik'
 import axios from "axios";
 import {PacmanIndicator, SkypeIndicator} from "react-native-indicators";
+import {get_data, save_data} from "./AsyncController/Controller";
+import BlogContext, {BlogProvider} from "./ContextApi";
 
 const SignupSchema = Yup.object().shape({
 
@@ -29,9 +29,12 @@ const SignupSchema = Yup.object().shape({
 });
 const SignIn = () => {
 
+
     const [loader, setLoader] = useState(false)
     const navigation = useNavigation()
     const [pass, setPass] = useState(true)
+    const {setHack,dat,setDat} = useContext(BlogContext)
+
 
     return (
         <Formik initialValues={{
@@ -40,18 +43,25 @@ const SignIn = () => {
         }}
                 validationSchema={SignupSchema}
 
-                onSubmit={values => {
+                onSubmit=  {  values => {
                     setLoader(true)
-                    console.log(values)
                     axios
                         .post("https://api.thenasheed.com/api/login", {
                             'username': values.userName,
                             'password': values.password,
 
                         },)
-                        .then(function (response) {
+                        .then(async function (response) {
+
 
                             if (response.data.status === true) {
+                                let Bearer = response.data.data.token;
+                                let details= response.data.data
+
+                                await save_data("ACCOUNT_DATA", Bearer)
+                                await save_data("User_DATA", details)
+
+
                                 navigation.navigate("DashBoard")
                             } else if (response.data.status === false) {
                                 alert(response.data.message, "\n", response.data.message)
@@ -163,7 +173,7 @@ const SignIn = () => {
                             marginHorizontal: wp("10%"),
                             marginTop: hp("4%")
                         }}>
-                            <Text style={{color: "white", textAlign: "center", fontSize: hp("1.3%")}}>
+                            <Text style={{color: "white", textAlign: "center", fontSize: hp("2%")}}>
                                 Dont have an account?
                                 <Text onPress={() => navigation.navigate("Register")} style={{color: "#FF7303"}}>
                                     Register {" "}

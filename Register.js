@@ -259,7 +259,7 @@ const Register = () => {
                                     marginHorizontal: wp("10%"),
                                     marginTop: hp("4%")
                                 }}>
-                                    <Text style={{color: "white", textAlign: "center", fontSize: hp("1.3%")}}>
+                                    <Text style={{color: "white", textAlign: "center", fontSize: hp("2%")}}>
                                         Already have an account?
                                         <Text onPress={() => navigation.navigate("SignIn")} style={{color: "#FF7303"}}>
                                             Login {" "}
@@ -272,7 +272,7 @@ const Register = () => {
                                     marginHorizontal: wp("10%"),
                                     marginTop: hp("1%")
                                 }}>
-                                    <Text style={{color: "white", textAlign: "center", fontSize: hp("1.3%")}}>
+                                    <Text style={{color: "white", textAlign: "center", fontSize: hp("2+%")}}>
                                         By signing up, you agree to our {" "}
 
                                         <Text style={{color: "#FF7303"}}>
