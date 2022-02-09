@@ -8,7 +8,6 @@ const Search = () => {
         <SafeAreaView style={{flex:1, backgroundColor:"black"}}>
 
 
-
         </SafeAreaView>
     )
 

@@ -13,7 +13,7 @@ export const BlogProvider = ({ children }) => {
     const [newNasheed, setnewNasheed] = useState(null);
     const [hack, setHack] = useState(null);
     const [check, setcheck] = useState(false);
-    const [check2,setcheck2 ] = useState(0);
+    const [check2,setcheck2 ] = useState(false);
 
 
     const getApidata = async () => {

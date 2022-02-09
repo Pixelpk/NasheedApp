@@ -5,14 +5,12 @@ import {
     UIManager,
     LayoutAnimation,
     StyleSheet,
-    Button, Text, Animated, SafeAreaView, Dimensions
+    Button, Text, Animated, SafeAreaView, Dimensions, Image
 } from "react-native";
 import Controller from "./check/Controller";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
 import SliderComp from "./check/SliderComp";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
-
-import songs from "./check/data";
 import TrackPlayer, {Capability, usePlaybackState} from "react-native-track-player";
 
 const TRACK_PLAYER_CONTROLS_OPTS = {
@@ -55,14 +53,13 @@ const Play = ({pk,index1}) => {
     const refRBSheet = useRef();
     const isPlayerReady = useRef(false);
     const index = useRef(index1);
-    const[state, newState] = useState(null)
+    const [state, newState] = useState(null)
     const [songIndex, setSongIndex] = useState(index1);
     const isItFromUser = useRef(true);
     const playbackState = usePlaybackState()
 
 
-
-    const skipTo = async (trackId)=>{
+    const skipTo = async (trackId) => {
         await TrackPlayer.skip((trackId))
     }
     useEffect(() => {
@@ -71,7 +68,7 @@ const Play = ({pk,index1}) => {
 
             await TrackPlayer.reset()
             await TrackPlayer.add(pk);
-            await TrackPlayer.skip((0))
+            await TrackPlayer.skip(index1)
             isPlayerReady.current = true;
             await TrackPlayer.updateOptions(TRACK_PLAYER_CONTROLS_OPTS);
             await TrackPlayer.play()
@@ -91,20 +88,18 @@ const Play = ({pk,index1}) => {
         };
     }, [scrollX]);
 
-    const GoNxt =()=>{
+    const GoNxt = () => {
         slider.current.scrollToOffset(
             {
-                offset:(songIndex+1)*width
+                offset: (songIndex + 1) * width
             }
-
-            )
+        )
     }
-    const GoPrev =()=>{
+    const GoPrev = () => {
         slider.current.scrollToOffset(
             {
-                offset:(songIndex-1)*width
+                offset: (songIndex - 1) * width
             }
-
         )
     }
 
@@ -117,7 +112,7 @@ const Play = ({pk,index1}) => {
         return (
             <Animated.View
                 style={{
-                    alignItems: 'center',
+                    alignItems: firstBoxPosition === "left" ? 'center' : "center",
                     width: width,
                     transform: [
                         {
@@ -128,9 +123,9 @@ const Play = ({pk,index1}) => {
                         },
                     ],
                 }}>
-                 <Animated.Image
-                    source={{uri:pk[songIndex].thumbnail_url}}
-                    style={{width: 250, height: 250, borderRadius: 10, marginTop:hp("8%")}}
+                <Animated.Image
+                    source={{uri: pk[songIndex].thumbnail_url}}
+                    style={{width: 250, height: 250, borderRadius: 10, marginTop: hp("8%")}}
                 />
             </Animated.View>
         );
@@ -139,49 +134,69 @@ const Play = ({pk,index1}) => {
 
     return (
 
-
-
         <View style={styles.container}>
 
 
-            <View  style={[
+            <View style={[
                 styles.view,
                 firstBoxPosition === "left" ? null : styles.moveRight
             ]}>
                 <View style={{alignItems: firstBoxPosition === "left" ? "flex-start" : "flex-start"}}>
                     <MaterialIcons
-                        onPress={()=>toggleFirstBox()} name={firstBoxPosition ==="left" ?"keyboard-arrow-up" : "keyboard-arrow-down"} color="white" size={30}/>
+                        onPress={() => toggleFirstBox()}
+                        name={firstBoxPosition === "left" ? "keyboard-arrow-up" : "keyboard-arrow-down"} color="white"
+                        size={30}/>
+
+
                 </View>
-                <View style={{ flex1:1, justifyContent:firstBoxPosition === "left" ? "flex-start" : "flex-end", alignItems:firstBoxPosition === "left" ? "flex-start" : "flex-end"}}>
+
+
+
+                <View style={{
+                    flex: firstBoxPosition === "left" ? 0.5 : 1,
+                    justifyContent: firstBoxPosition === "left" ? "flex-start" : "flex-end",
+                    alignSelf: firstBoxPosition === "left" ? "center" : "center"
+                }}>
+
 
                     <Animated.FlatList
-                                    ref={slider}
-                                    horizontal
-                                    pagingEnabled
-                                    showsHorizontalScrollIndicator={false}
-                                    scrollEventThrottle={16}
-                                    data={pk}
-                                    renderItem={renderItem}
-                                    keyExtractor={item => item.id}
-                                    onScroll={Animated.event(
-                                        [{nativeEvent: {contentOffset: {x: scrollX}}}],
-                                        {useNativeDriver: true},
-                                    )}/>
+                        ref={slider}
+                        horizontal
+                        pagingEnabled
+                        showsHorizontalScrollIndicator={false}
+                        scrollEventThrottle={16}
+                        data={pk}
+                        renderItem={renderItem}
+                        keyExtractor={item => item.id}
+                        onScroll={Animated.event(
+                            [{nativeEvent: {contentOffset: {x: scrollX}}}],
+                            {useNativeDriver: true},
+                        )}/>
 
-                    {firstBoxPosition === "left"? null
-                        :<View style={{alignSelf:"center"}}>
+                    {firstBoxPosition === "left" ? <Text numberOfLines={1} style={{
+                            fontSize: hp("1.7%"),
+                            textAlign: 'center',
+                            width: wp("50%"),
+                            alignSelf: "center",
+                            paddingBottom: 10,
+                            color: '#ffffff'
+                        }}>{pk[songIndex].title}</Text>
+                        : <View style={{alignSelf: "center"}}>
                             <Text style={styles1.title}>{pk[songIndex].title}</Text>
-                            <Text style={styles1.artist} >{pk[songIndex].artist}</Text>
+                            <Text style={styles1.artist}>{pk[songIndex].artist}</Text>
+
                         </View>
-                        }
+                    }
 
-                    {firstBoxPosition === "left" ? null  : <View style={{alignSelf:"center", marginTop:"7%"}}>
-
-                        <SliderComp />
+                    {firstBoxPosition === "left" ? null : <View style={{alignSelf: "center", marginTop: "7%"}}>
+                        <SliderComp/>
                     </View>}
 
-                    <View style={{height:firstBoxPosition==="left" ? "90%": "20%",alignSelf:firstBoxPosition === "left" ? "flex-end" : "center"}}>
-                        <Controller onNext={GoNxt} onPrv={GoPrev}  />
+                    <View style={{
+                        height: firstBoxPosition === "left" ? "90%" : "20%",
+                        alignSelf: firstBoxPosition === "left" ? "center" : "center"
+                    }}>
+                        <Controller onNext={GoNxt} onPrv={GoPrev}/>
                     </View>
                 </View>
             </View>
@@ -196,14 +211,14 @@ const styles = StyleSheet.create({
 
     },
     view: {
-        height: 100,
+        height: 120,
         width: "100%",
         borderRadius: 5,
         backgroundColor:"black",
 
     },
     moveRight: {
-        height: "92%",
+        height: "100%",
         width: "100%",
 
     },

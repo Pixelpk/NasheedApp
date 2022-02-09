@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useContext, useState} from "react";
 import {Dimensions, FlatList, Image, SafeAreaView, Text, TouchableOpacity, View} from "react-native";
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import MaterialIcons from "react-native-vector-icons/MaterialIcons";
@@ -8,9 +8,12 @@ import {useNavigation} from "@react-navigation/native";
 import {SearchBar} from "react-native-elements";
 import LinearGradient from "react-native-linear-gradient";
 import data from "./check/data";
+import BlogContext from "./ContextApi";
 
 
 const CatagoryScreen =({route})=> {
+    const {setHack, hack, dat, topSong, newNasheed, latestNasheed,setcheck2,check2} = useContext(BlogContext)
+
     const {name, songs} = route.params;
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -44,11 +47,11 @@ const CatagoryScreen =({route})=> {
 
         <SafeAreaView style={{flex: 1, backgroundColor: "black"}}>
 
-            <View style={{flexDirection: "row", justifyContent: "space-around", marginTop: hp("5%")}}>
-                <View>
-                    <MaterialIcons onPress={() => navigation.navigate("DashBoard")} style={{}}
-                                   name="keyboard-arrow-left" color="white" size={27}/>
-                </View>
+            <View style={{flexDirection: "row", justifyContent: "center", marginTop: hp("5%")}}>
+                {/*<View>*/}
+                {/*    <MaterialIcons onPress={() => navigation.navigate("DashBoard")} style={{}}*/}
+                {/*                   name="keyboard-arrow-left" color="white" size={27}/>*/}
+                {/*</View>*/}
                 <View style={{width: hp("27%"), flexDirection: "row", justifyContent: "center", alignItems: "center"}}>
                     <Text numberOfLines={1} style={{textAlign: "center", fontSize: hp("2%"), color: "white"}}>
                         {name}
@@ -102,11 +105,12 @@ const CatagoryScreen =({route})=> {
 
                                           <TouchableOpacity
                                               onPress={() => {
-                                                  navigation.navigate("PlayScreen", {
-
+                                                  setcheck2(true)
+                                                  navigation.navigate("DashBoard", {
                                                       index1: index,
                                                       pk: songs,
-                                                      img:item.thumbnail_url
+                                                      img: item.thumbnail_url,
+
                                                   })
 
                                               }}>

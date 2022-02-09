@@ -15,7 +15,7 @@ import BlogContext from "../ContextApi";
 const LatestNasheeds =()=>{
 
 
-    const {latestNasheed} = useContext(BlogContext)
+    const {latestNasheed,setcheck2} = useContext(BlogContext)
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState(latestNasheed);
     const [masterDataSource, setMasterDataSource] = useState(latestNasheed);
@@ -25,7 +25,6 @@ const LatestNasheeds =()=>{
     const searchFilterFunction = (text) => {
 
         if (text) {
-
             const newData = masterDataSource.filter(function (item) {
                 const itemData = item.title
                     ? item.title.toUpperCase()
@@ -94,11 +93,11 @@ const LatestNasheeds =()=>{
                                  <TouchableOpacity
                                      onPress={() => {
 
-                                         navigation.navigate("PlayScreen", {
+                                         setcheck2(true)
+                                         navigation.navigate("DashBoard", {
                                              index1: index,
                                              pk: latestNasheed,
-                                             img: item.thumbnail_url
-
+                                             img: item.thumbnail_url,
                                          })
 
 

@@ -2,14 +2,13 @@
 import React from "react";
 import Route from "./Route";
 import {BlogProvider} from "./ContextApi";
-import Play from "./Play";
-import DashBoard from "./BottomNavigation/DashBoard";
+
 
 const App =()=>{
 
     return (
         <BlogProvider>
-         <Route/>
+            <Route/>
         </BlogProvider>
     )
 

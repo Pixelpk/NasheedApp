@@ -1,11 +1,10 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Dimensions, FlatList,SafeAreaView, Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
-
 import {heightPercentageToDP as hp, widthPercentageToDP as wp} from "react-native-responsive-screen";
 import {useNavigation} from "@react-navigation/native";
 import BlogContext from "../ContextApi";
-import LinearGradient from "react-native-linear-gradient";
 import {get_data} from "../AsyncController/Controller";
+
 
 
 
@@ -13,21 +12,23 @@ const Home =()=> {
 
     const {setHack, hack, dat, topSong, newNasheed, latestNasheed,setcheck2,check2} = useContext(BlogContext)
 
-    useEffect(() => {
-        const unsubscribe = navigation.addListener('focus', () => {
-            get_data("User_DATA")
-                .then((response) => {
-                    setHack(response)
-                })
-                .catch((error) => {
-                    console.log(error.response);
-                });
 
-        });
-        return unsubscribe
-
-
-    }, [navigation])
+    //
+    // useEffect(() => {
+    //     const unsubscribe = navigation.addListener('focus', () => {
+    //         get_data("User_DATA")
+    //             .then((response) => {
+    //                 setHack(response)
+    //             })
+    //             .catch((error) => {
+    //                 console.log(error.response);
+    //             });
+    //
+    //     });
+    //     return unsubscribe
+    //
+    //
+    // }, [navigation])
 
 
     const [search, setSearch] = useState('');
@@ -75,8 +76,7 @@ const Home =()=> {
 
             }
 
-
-                <View style={{marginTop: hp("4%",), flexDirection: "row", alignItems: "center"}}>
+            <View style={{marginTop: hp("4%",), flexDirection: "row", alignItems: "center"}}>
                     <View style={{
                         height: hp("1%"),
                         width: wp("1.8%"),
@@ -170,12 +170,12 @@ const Home =()=> {
                                            }) => {
                                   return (
                                       <TouchableOpacity
-                                          onPress={() => {
-                                              setcheck2(!check2)
-                                              navigation.navigate("DashBoard", {
+                                          onPress={ () => {
+                                               setcheck2(true)
+                                               navigation.navigate("DashBoard", {
                                                   index1: index,
                                                   pk: topSong,
-                                                  img: item.thumbnail_url
+                                                  img: item.thumbnail_url,
 
                                               })
                                           }}>
@@ -252,10 +252,11 @@ const Home =()=> {
                                   return (
                                       <TouchableOpacity
                                           onPress={() => {
-                                              navigation.navigate("PlayScreen", {
+                                              setcheck2(true)
+                                              navigation.navigate("DashBoard", {
                                                   index1: index,
                                                   pk: newNasheed,
-                                                  img: item.thumbnail_url
+                                                  img: item.thumbnail_url,
 
                                               })
                                           }}>
@@ -332,11 +333,11 @@ const Home =()=> {
                                   return (
                                       <TouchableOpacity
                                           onPress={() => {
-                                              navigation.navigate("PlayScreen", {
+                                              setcheck2(true)
+                                              navigation.navigate("DashBoard", {
                                                   index1: index,
                                                   pk: latestNasheed,
-                                                  img: item.thumbnail_url
-
+                                                  img: item.thumbnail_url,
                                               })
                                           }}>
 

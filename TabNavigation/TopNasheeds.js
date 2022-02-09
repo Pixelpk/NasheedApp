@@ -102,13 +102,15 @@ const TopNasheeds =()=>{
                               <TouchableOpacity
 
                                   onPress={() => {
-
-                                      navigation.navigate("PlayScreen", {
-                                          index1:  topSong.findIndex( (element) => element.id === item.id),
+                                      setcheck2(true)
+                                      navigation.navigate("DashBoard", {
+                                          index1: index,
                                           pk: topSong,
-                                          img: item.thumbnail_url
-
+                                          img: item.thumbnail_url,
                                       })
+
+                                      // index1:  topSong.findIndex( (element) => element.id === item.id),
+
                                   }}>
                                   <View style={{flexDirection:"row" ,borderRadius:8, marginTop:20, paddingBottom:2, backgroundColor:"#1F1F21"}}>
 

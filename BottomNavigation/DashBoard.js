@@ -1,4 +1,4 @@
-import React, {useContext, useEffect, useMemo, useRef, useState} from "react";
+import React, {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
 import {Dimensions, StyleSheet, Image, SafeAreaView, Text, TouchableOpacity, View, Button, render} from "react-native";
 import {
     widthPercentageToDP as wp,
@@ -23,23 +23,34 @@ import {Badge} from "react-native-elements";
 import Fontisto from "react-native-vector-icons/Fontisto";
 import Search from "./Search";
 import Play from "../Play";
-import BottomSheet from "@gorhom/bottom-sheet";
 
 
+const Stack1 = createNativeStackNavigator();
 
 const Tab = createBottomTabNavigator(
 
 );
 const TabBarComponent = props => <BottomTabBar {...props} />;
+import {createNativeStackNavigator} from "@react-navigation/native-stack";
+import CatagoryScreen from "../CatagoryScreen";
 
+const HomeStackScreen =()=> (
+    <Stack1.Navigator>
+        <Stack1.Screen name="Home" component={Home} options={{headerShown: false}} />
+        <Stack1.Screen name="CatagoryScreen" component={CatagoryScreen} options={{headerShown: false}}/>
+    </Stack1.Navigator>
 
+)
 
 
 const DashBoard=({route,navigation})=> {
-    const {setHack, hack,topSong,check,check2} = useContext(BlogContext)
-    const {pk,index1} = route.params
+    const {setHack, hack,topSong,check,setcheck2,check2} = useContext(BlogContext)
+    const {pk,index1,check3} = route.params
     const [visible, setVisible] = useState(false);
-    console.log("index", index1)
+    const [value, setValue] = useState(check3)
+
+
+
 
     const showDialog = () => {
         setVisible(true);
@@ -55,9 +66,19 @@ const DashBoard=({route,navigation})=> {
 
     };
 
+    const Heck =()=>{
+        if (check2 === true){
+            return(
+                <Play index1={index1} pk={pk} />
+            )
+        }
 
-    const sheetRef = useRef(BottomSheet)
-    const snapPoints = useMemo(() => ['25%', '25%', '100%'], []);
+        }
+
+
+
+
+    const snapPoints = useMemo(() => ['25%', '25%', '100%']);
 
 
         let state = true
@@ -87,9 +108,14 @@ const DashBoard=({route,navigation})=> {
 
             })} tabBar={(props) => (
                 <>
-                   {check2=== true  ? <Play index1={index1} pk={pk}/> :null}
-                        <TabBarComponent {...props} style={{ borderTopColor: '#605F60' }} />
-                </>
+
+                    {check2 === true ? <Heck />
+                        : null}
+
+                    <TabBarComponent   navigation={props.navigation} {...props} style={{ borderTopColor: '#605F60' }} />
+
+
+                        </>
             )}>
 
                 <Tab.Screen options={{
@@ -172,7 +198,7 @@ const DashBoard=({route,navigation})=> {
 
                             <SafeAreaView style={{flexDirection: "row"}}>
                                 {hack === null ?  <Ionicons onPress={()=> navigation.navigate("DashBoard", {
-                                    screen:"Search"
+                                    screen:"Search",
                                     })} style={{marginRight:hp("2%")}} name="search" size={20} color={"white"}  /> :
 
                                     <View style={{flexDirection: "row"}}>
@@ -238,7 +264,7 @@ const DashBoard=({route,navigation})=> {
                             </View>
                         </View>);
                     }
-                }} name=" " component={Home}/>
+                }} name=" " component={HomeStackScreen}/>
                 <Tab.Screen   options={{ headerShown:true, headerStyle:{
                         backgroundColor: '#171719',
 

@@ -9,7 +9,7 @@ import BlogContext from "../ContextApi";
 
 
 const NewNasheeds =()=>{
-    const {newNasheed} = useContext(BlogContext)
+    const {newNasheed,setcheck2} = useContext(BlogContext)
 
     const [search, setSearch] = useState('');
     const [filteredDataSource, setFilteredDataSource] = useState([]);
@@ -87,11 +87,11 @@ const NewNasheeds =()=>{
 
                               <TouchableOpacity
                                   onPress={() => {
-                                      navigation.navigate("PlayScreen", {
+                                      setcheck2(true)
+                                      navigation.navigate("DashBoard", {
                                           index1: index,
                                           pk: newNasheed,
-                                          img: item.thumbnail_url
-
+                                          img: item.thumbnail_url,
                                       })
 
                                   }}>

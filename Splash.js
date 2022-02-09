@@ -16,6 +16,7 @@ const Splash = (navigation) => {
                 navigation.navigation.replace("DashBoard", {
                     index1: 0,
                     pk: 0,
+                    check3:false,
                 });
             }, 5000);
 
