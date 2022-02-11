@@ -12,8 +12,8 @@ const NewNasheeds =()=>{
     const {newNasheed,setcheck2} = useContext(BlogContext)
 
     const [search, setSearch] = useState('');
-    const [filteredDataSource, setFilteredDataSource] = useState([]);
-    const [masterDataSource, setMasterDataSource] = useState([]);
+    const [filteredDataSource, setFilteredDataSource] = useState(newNasheed);
+    const [masterDataSource, setMasterDataSource] = useState(newNasheed);
     const navigation = useNavigation()
 
 
@@ -80,7 +80,7 @@ const NewNasheeds =()=>{
 
 
             <FlatList style={{marginHorizontal:"6%", marginBottom:hp("2%")}}
-                      data={newNasheed}
+                      data={filteredDataSource}
                       keyExtractor={item => item.id}
                       renderItem={({item, index}) => {
                           return (
@@ -89,7 +89,7 @@ const NewNasheeds =()=>{
                                   onPress={() => {
                                       setcheck2(true)
                                       navigation.navigate("DashBoard", {
-                                          index1: index,
+                                          index1:  newNasheed.findIndex( (element) => element.id === item.id),
                                           pk: newNasheed,
                                           img: item.thumbnail_url,
                                       })

@@ -16,8 +16,8 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import * as Yup from "yup";
 import {Formik} from 'formik'
 import axios from "axios";
-import {PacmanIndicator, SkypeIndicator} from "react-native-indicators";
-import {get_data, save_data} from "./AsyncController/Controller";
+import {SkypeIndicator} from "react-native-indicators";
+import {save_data} from "./AsyncController/Controller";
 import BlogContext, {BlogProvider} from "./ContextApi";
 
 const SignupSchema = Yup.object().shape({
@@ -62,7 +62,12 @@ const SignIn = () => {
                                 await save_data("User_DATA", details)
 
 
-                                navigation.navigate("DashBoard")
+                                navigation.navigate("DashBoard", {
+                                    index1: 0,
+                                    pk: 0,
+
+                                });
+
                             } else if (response.data.status === false) {
                                 alert(response.data.message, "\n", response.data.message)
                                 setLoader(false)
@@ -150,7 +155,6 @@ const SignIn = () => {
                             </Text>
                         </View>
                         }
-
                         <View>
                             <TouchableOpacity onPress={handleSubmit}>
                                 <LinearGradient style={{

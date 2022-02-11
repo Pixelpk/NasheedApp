@@ -211,7 +211,7 @@ const styles = StyleSheet.create({
 
     },
     view: {
-        height: 120,
+        height: 110,
         width: "100%",
         borderRadius: 5,
         backgroundColor:"black",

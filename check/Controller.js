@@ -8,10 +8,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import TrackPlayer, {
     usePlaybackState,
-    useTrackPlayerEvents,
-    Event,
 } from 'react-native-track-player';
-import LinearGradient from "react-native-linear-gradient";
 import {widthPercentageToDP as wp} from "react-native-responsive-screen";
 import Entypo from "react-native-vector-icons/Entypo";
 import Foundation from "react-native-vector-icons/Foundation";
@@ -22,7 +19,6 @@ export default function Controller({onNext, onPrv}) {
     const isPlaying = useRef('paused'); //paused play loading
 
     useEffect(() => {
-        console.log('Player State', playbackState);
 
         if (playbackState === 'playing' || playbackState === 3) {
             isPlaying.current = 'playing';

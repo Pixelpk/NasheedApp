@@ -9,7 +9,7 @@ import BlogContext from "../ContextApi";
 
 
 const TopNasheeds =()=>{
-    const {topSong} = useContext(BlogContext)
+    const {setHack, hack, dat, topSong, newNasheed, latestNasheed,setcheck2,check2} = useContext(BlogContext)
 
     const [search, setSearch] = useState('');
     const [check, setcheck] = useState(null);
@@ -104,7 +104,7 @@ const TopNasheeds =()=>{
                                   onPress={() => {
                                       setcheck2(true)
                                       navigation.navigate("DashBoard", {
-                                          index1: index,
+                                          index1:  topSong.findIndex( (element) => element.id === item.id),
                                           pk: topSong,
                                           img: item.thumbnail_url,
                                       })

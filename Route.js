@@ -5,9 +5,7 @@ import Splash from "./Splash";
 import Register from "./Register";
 import SignIn from "./SignIn";
 import DashBoard from "./BottomNavigation/DashBoard";
-import CatagoryScreen from "./CatagoryScreen";
-import PlayScreen from "./PlayScreen";
-import Play from "./Play";
+
 
 
 
@@ -20,7 +18,6 @@ const Route = () => {
             <Stack.Navigator>
                 <Stack.Screen name="Splash" component={Splash} options={{headerShown: false}}/>
                 <Stack.Screen name="DashBoard" component={DashBoard} options={{headerShown: false}}/>
-                {/*<Stack.Screen name="PlayScreen" component={PlayScreen} options={{headerShown: false}} />*/}
                 <Stack.Screen name="SignIn" component={SignIn} options={{headerShown: false}}/>
                 <Stack.Screen name="Register" component={Register} options={{headerShown: false}}/>
             </Stack.Navigator>

@@ -63,36 +63,36 @@ const CatagoryScreen =({route})=> {
                 </View>
             </View>
 
-            <View style={{marginTop: hp("1%")}}>
+            {/*<View style={{marginTop: hp("1%")}}>*/}
 
-                <SearchBar
-                    inputContainerStyle={{backgroundColor: '#222225', borderRadius: 20}}
+            {/*    <SearchBar*/}
+            {/*        inputContainerStyle={{backgroundColor: '#222225', borderRadius: 20}}*/}
 
-                    showLoading={false}
+            {/*        showLoading={false}*/}
 
-                    containerStyle={{
-                        backgroundColor: 'black',
-                        marginHorizontal: 15,
-                        borderWidth: 0,
-                        shadowColor: "#000",
-                        borderBottomColor: 'transparent',
-                        borderTopColor: 'transparent'
-                    }}
-                    inputStyle={
-                        {fontSize: hp("2%")}
-                    }
+            {/*        containerStyle={{*/}
+            {/*            backgroundColor: 'black',*/}
+            {/*            marginHorizontal: 15,*/}
+            {/*            borderWidth: 0,*/}
+            {/*            shadowColor: "#000",*/}
+            {/*            borderBottomColor: 'transparent',*/}
+            {/*            borderTopColor: 'transparent'*/}
+            {/*        }}*/}
+            {/*        inputStyle={*/}
+            {/*            {fontSize: hp("2%")}*/}
+            {/*        }*/}
 
-                    clearIcon={true}
-                    onClearText={() => console.log('onClearText')}
-                    onChangeText={(text) => searchFilterFunction(text)}
-                    onClear={(text) => searchFilterFunction('')}
-                    placeholder='Search..'
-                    cancelButtonTitle='Cancel'
-                    round
-                    searchIcon={{size: 24, color: "orange"}}
-                    value={search}
-                />
-            </View>
+            {/*        clearIcon={true}*/}
+            {/*        onClearText={() => console.log('onClearText')}*/}
+            {/*        onChangeText={(text) => searchFilterFunction(text)}*/}
+            {/*        onClear={(text) => searchFilterFunction('')}*/}
+            {/*        placeholder='Search..'*/}
+            {/*        cancelButtonTitle='Cancel'*/}
+            {/*        round*/}
+            {/*        searchIcon={{size: 24, color: "orange"}}*/}
+            {/*        value={search}*/}
+            {/*    />*/}
+            {/*</View>*/}
 
             <FlatList style={{marginHorizontal: "6%", marginBottom: hp("2%")}}
                       data={songs}

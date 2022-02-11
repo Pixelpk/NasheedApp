@@ -95,7 +95,7 @@ const LatestNasheeds =()=>{
 
                                          setcheck2(true)
                                          navigation.navigate("DashBoard", {
-                                             index1: index,
+                                             index1:  latestNasheed.findIndex( (element) => element.id === item.id),
                                              pk: latestNasheed,
                                              img: item.thumbnail_url,
                                          })

@@ -14,7 +14,8 @@ export const BlogProvider = ({ children }) => {
     const [hack, setHack] = useState(null);
     const [check, setcheck] = useState(false);
     const [check2,setcheck2 ] = useState(false);
-
+    const [visible, setVisible] = useState(false);
+    const [notification, setNotification] = useState(null);
 
     const getApidata = async () => {
         try {
@@ -77,7 +78,7 @@ export const BlogProvider = ({ children }) => {
     }, []);
 
     return (
-        <BlogContext.Provider value={{dat, latestNasheed,newNasheed,hack,check, setcheck,check2, setcheck2, topSong,setHack}}>{children}</BlogContext.Provider>
+        <BlogContext.Provider value={{dat, latestNasheed,newNasheed,hack,check, setcheck,check2, setcheck2, topSong,setHack,visible, setVisible, notification,setNotification}}>{children}</BlogContext.Provider>
     );
 };
 
